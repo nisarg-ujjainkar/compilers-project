@@ -1527,7 +1527,7 @@
        {\string\bibcite{#1}{\the\c@enumi}}\fi\ignorespaces}
 
 
-\usepackage{natbib}
+\usepackage[square,sort,comma,numbers]{natbib}
  \setcitestyle{aysep={}}	% no comma between author and year
  \renewcommand{\cite}{\citep}	% to get "(Author Year)" with natbib
  \newcommand{\namecite}{\citet}	% to get "Author (Year)" with natbib
