@@ -4,19 +4,19 @@
 #include <stdlib.h>
 symrec *sym_table = (symrec *)0;
 %}
-number [0-9]+|[0-9]*"."[0-9]+
-id [a-zA-Z]+[a-zA-Z0-9]*
-fun [a-zA-Z]+[a-zA-Z0-9]*
+floatpt [0-9]+"."[0-9]+
+integer [0-9]+
+id [a-zA-Z]+[a-zA-Z0-9_]*
 %%
-[ ] {}
 "while" return WHILE;
 "if"    return IF;
 "for"   return FOR;
 "else"  return ELSE;
-{number} {sscanf(yytext,"%lf",&yylval.val);return NUM;}
+{integer} {sscanf(yytext,"%d",&yylval.integer);return INT;}
+{floatpt} {sscanf(yytext,"%lf",&yylval.floatpt);return FLOAT;}
 {id} {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
-{fun} {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,FUN);yylval.tptr=s;return FUN;}
-\n|.  {return yytext[0];}
+[ \t\n] {/* Remove White Space */}
+.  {return yytext[0];}
 %%
 
 /* The symbol table: a chain of `struct symrec'.  */

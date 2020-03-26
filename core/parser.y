@@ -1,7 +1,7 @@
 /* 
 Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 */
-
+%error-verbose
 %{
 #include<stdio.h>
 #include<string.h>
@@ -13,15 +13,16 @@ int  yylex(void);
 void yyerror (char  *); 
 %}
 %union {
+int inte;
 double   val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
 }
 
 
 
-%token  <val> NUM        /* Simple double precision number   */
+%token <inte> INT
+%token  <val> FLOAT        /* Simple double precision number   */
 %token <tptr> VAR   /* Variable and Function            */
-%token <tptr> FUN
 %token WHILE
 %token FOR
 %token IF
@@ -38,16 +39,24 @@ struct symrec  *tptr;   /* For returning symbol-table pointers      */
 /* Grammar follows */
 
 %%
-input:   /* empty */
-        | input line
-;
+code:   /* Empty */
+        | code line;
 
-line:
-          '\n'
-        | while
-        | exp ';' '\n'   { printf ("\t%lf\n", $1); }
-        | error ';' '\n' { yyerrok;                }
-;
+line:   whilestm
+        | ifstm
+        | exp ';';
+
+whilestm:       WHILE exp line
+                | WHILE exp block;
+
+ifstm:  IF exp line
+        | IF exp block
+        | IF exp line ELSE line
+        | IF exp block ELSE line
+        | IF exp block ELSE block
+        | IF exp line ELSE block;
+
+block:  '{' code '}';
 
 exp:      NUM                { $$ = $1;                         }
         | VAR                { $$ = $1->value;                  }
@@ -56,7 +65,6 @@ exp:      NUM                { $$ = $1;                         }
         | exp '-' exp        { $$ = $1 - $3;                    }
         | exp '*' exp        { $$ = $1 * $3;                    }
         | exp '/' exp        { $$ = $1 / $3;                    }
-        | FUN '(' exp ')'    { if(strcmp($1->name,"SIN")) $$=sin($3); else $$=cos($3);}
         | '-' exp  %prec NEG { $$ = -$2;                        }
         | '(' exp ')'        { $$ = $2;                         }
 ;
