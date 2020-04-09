@@ -8,6 +8,7 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 #include<stdlib.h>  
 #include<ctype.h>
 #include<math.h>
+#include<stdbool.h>
 #include "calc.h"  /* Contains definition of `symrec'        */
 int  yylex(void);
 void yyerror (char  *); 
@@ -56,9 +57,12 @@ ifstm:  IF exp line
         | IF exp block ELSE block
         | IF exp line ELSE block;
 
-block:  '{' code '}';
+block:  '{' lines '}';
 
-exp:      NUM                { $$ = $1;                         }
+lines:	/* Empty */
+		| lines line;
+
+exp:      FLOAT              { $$ = $1;                         }
         | VAR                { $$ = $1->value;                  }
         | VAR '=' exp        { $$ = $3; $1->value = $3;         }
         | exp '+' exp        { $$ = $1 + $3;                    }

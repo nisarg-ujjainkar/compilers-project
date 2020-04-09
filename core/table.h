@@ -12,6 +12,8 @@ typedef struct symrec symrec;
 /* The symbol table: a chain of `struct symrec'.     */
 extern symrec *sym_table;
 
+extern int lineNum;
+
 symrec *putsym ();
 symrec *getsym ();
 
