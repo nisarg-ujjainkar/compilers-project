@@ -14,23 +14,33 @@ int  yylex(void);
 void yyerror (char  *); 
 %}
 %union {
-int inte;
-double   val;  /* For returning numbers.                   */
+int integer;
+double val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
 }
 
 
 
 %token <inte> INT
-%token  <val> FLOAT        /* Simple double precision number   */
+%token  <val> NUM        /* Simple double precision number   */
 %token <tptr> VAR   /* Variable and Function            */
 %token WHILE
 %token FOR
 %token IF
 %token ELSE
+%token GEQ
+%token LEQ
+%token GT
+%token LT
+%token EQ
+%token NEQ
+%token AND
+%token OR
 %type  <val>  exp
 
 
+%left GEQ LEQ LT GT EQ NEQ
+%left AND OR
 %right '='
 %left '-' '+'
 %left '*' '/'
@@ -40,38 +50,40 @@ struct symrec  *tptr;   /* For returning symbol-table pointers      */
 /* Grammar follows */
 
 %%
-code:   /* Empty */
-        | code line;
+code:	/* Empty */
+		| code line ';'
+		| code block;
 
-line:   whilestm
-        | ifstm
-        | exp ';';
+block:	'{' code '}';
 
-whilestm:       WHILE exp line
-                | WHILE exp block;
+line:	WhileStm
+		| exp;
 
-ifstm:  IF exp line
-        | IF exp block
-        | IF exp line ELSE line
-        | IF exp block ELSE line
-        | IF exp block ELSE block
-        | IF exp line ELSE block;
+WhileStm: WHILE '(' cond ')' block
+		  | WHILE '(' cond ')' line ';';
 
-block:  '{' lines '}';
+cond:	cond join cond
+		| exp relop exp;
 
-lines:	/* Empty */
-		| lines line;
+join:	AND
+		| OR;
 
-exp:      FLOAT              { $$ = $1;                         }
-        | VAR                { $$ = $1->value;                  }
-        | VAR '=' exp        { $$ = $3; $1->value = $3;         }
-        | exp '+' exp        { $$ = $1 + $3;                    }
-        | exp '-' exp        { $$ = $1 - $3;                    }
-        | exp '*' exp        { $$ = $1 * $3;                    }
-        | exp '/' exp        { $$ = $1 / $3;                    }
-        | '-' exp  %prec NEG { $$ = -$2;                        }
-        | '(' exp ')'        { $$ = $2;                         }
-;
+relop:	GEQ 
+		| LEQ 
+		| LT 
+		| GT 
+		| EQ 
+		| NEQ;
+
+exp:	VAR						{ $$ = $1->val; }
+		| NUM					{ $$ = $1; }
+		| exp '+' exp			{ $$ = $1 + $3; }
+		| exp '-' exp			{ $$ = $1 - $3; }
+		| exp '*' exp			{ $$ = $1 * $3; }
+		| exp '/' exp			{ $$ = $1 / $3; }
+		| '-' exp %prec NEG		{ $$ = -$2; }
+		| '(' exp ')'			{ $$ = $2; }
+
 /* End of grammar */
 %%
 

@@ -13,11 +13,16 @@ id [a-zA-Z]+[a-zA-Z0-9_]*
 "if"    return IF;
 "for"   return FOR;
 "else"  return ELSE;
-"<="    return OPERATOR;
-">="    return OPERATOR;
-[-+=*/><] return OPERATOR;
+"<="    return LEQ;
+">="    return GEQ;
+">"     return GT;
+"<"     return LT;
+"=="    return EQ;
+"!="    return NEQ;
+"&&"    return AND;
+"||"    return OR;
 {integer} {sscanf(yytext,"%d",&yylval.integer);return INT;}
-{floatpt} {sscanf(yytext,"%lf",&yylval.floatpt);return FLOAT;}
+{floatpt} {sscanf(yytext,"%lf",&yylval.val);return NUM;}
 {id} {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
 [ \t] {/* Remove White Space */}
 [\n]  {lineNum++;}

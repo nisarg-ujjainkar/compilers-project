@@ -46,13 +46,21 @@ extern int yydebug;
   enum yytokentype
   {
     INT = 258,
-    FLOAT = 259,
+    NUM = 259,
     VAR = 260,
     WHILE = 261,
     FOR = 262,
     IF = 263,
     ELSE = 264,
-    NEG = 265
+    GEQ = 265,
+    LEQ = 266,
+    GT = 267,
+    LT = 268,
+    EQ = 269,
+    NEQ = 270,
+    AND = 271,
+    OR = 272,
+    NEG = 273
   };
 #endif
 
@@ -63,11 +71,11 @@ union YYSTYPE
 {
 #line 16 "parser.y" /* yacc.c:1909  */
 
-int inte;
-double   val;  /* For returning numbers.                   */
+int integer;
+double val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
 
-#line 71 "parser.h" /* yacc.c:1909  */
+#line 79 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
