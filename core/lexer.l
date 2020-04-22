@@ -1,11 +1,11 @@
 %{
 #include "parser.h"
-#include "calc.h"
+#include "table.h"
 #include <stdlib.h>
 symrec *sym_table = (symrec *)0;
 int lineNum=0;
 %}
-floatpt [0-9]+"."[0-9]+
+floatpt [0-9]+"."?[0-9]*
 integer [0-9]+
 id [a-zA-Z]+[a-zA-Z0-9_]*
 %%
@@ -21,7 +21,6 @@ id [a-zA-Z]+[a-zA-Z0-9_]*
 "!="    return NEQ;
 "&&"    return AND;
 "||"    return OR;
-{integer} {sscanf(yytext,"%d",&yylval.integer);return INT;}
 {floatpt} {sscanf(yytext,"%lf",&yylval.val);return NUM;}
 {id} {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
 [ \t] {/* Remove White Space */}

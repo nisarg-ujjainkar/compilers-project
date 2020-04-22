@@ -352,8 +352,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 19
-#define YY_END_OF_BUFFER 20
+#define YY_NUM_RULES 18
+#define YY_END_OF_BUFFER 19
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -363,10 +363,10 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[41] =
     {   0,
-        0,    0,   20,   18,   16,   17,   18,   18,   13,    8,
-       18,    7,   15,   15,   15,   15,   15,   18,   10,   11,
-        0,   13,    5,    9,    6,   15,   15,   15,   15,    2,
-       15,   12,   14,   15,    3,   15,    4,   15,    1,    0
+        0,    0,   19,   17,   15,   16,   17,   17,   13,    8,
+       17,    7,   14,   14,   14,   14,   14,   17,   10,   11,
+       13,   13,    5,    9,    6,   14,   14,   14,   14,    2,
+       14,   12,   13,   14,    3,   14,    4,   14,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -469,7 +469,7 @@ char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
 #include "parser.h"
-#include "calc.h"
+#include "table.h"
 #include <stdlib.h>
 symrec *sym_table = (symrec *)0;
 int lineNum=0;
@@ -813,40 +813,35 @@ return OR;
 case 13:
 YY_RULE_SETUP
 #line 24 "lexer.l"
-{sscanf(yytext,"%d",&yylval.integer);return INT;}
+{sscanf(yytext,"%lf",&yylval.val);return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 25 "lexer.l"
-{sscanf(yytext,"%lf",&yylval.val);return NUM;}
+{symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 26 "lexer.l"
-{symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
-	YY_BREAK
-case 16:
-YY_RULE_SETUP
-#line 27 "lexer.l"
 {/* Remove White Space */}
 	YY_BREAK
+case 16:
+/* rule 16 can match eol */
+YY_RULE_SETUP
+#line 27 "lexer.l"
+{lineNum++;}
+	YY_BREAK
 case 17:
-/* rule 17 can match eol */
 YY_RULE_SETUP
 #line 28 "lexer.l"
-{lineNum++;}
+{return yytext[0];}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 29 "lexer.l"
-{return yytext[0];}
-	YY_BREAK
-case 19:
-YY_RULE_SETUP
-#line 30 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 850 "lexer.c"
+#line 845 "lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1851,7 +1846,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 30 "lexer.l"
+#line 29 "lexer.l"
 
 
 /* The symbol table: a chain of `struct symrec'.  */
