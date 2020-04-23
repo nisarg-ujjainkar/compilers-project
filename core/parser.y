@@ -56,18 +56,18 @@ code:	/* Empty */
 
 block:	'{' code '}';
 
-line:	WhileStm
-		| IfStm
-		| assn ';';
+line:	WhileStm				{printf("While Found\n");}
+		| IfStm					
+		| assn ';'				{printf("Assignment Found\n");};
 
 assn: exp '=' exp;
 
-IfStm:	IF '(' cond ')' block
-		| IF '(' cond ')' line
-		| IF '(' cond ')' block ELSE block
-		| IF '(' cond ')' line ELSE block
-		| IF '(' cond ')' line ELSE line
-		| IF '(' cond ')' block ELSE line;
+IfStm:	IF '(' cond ')' block				{printf("If Found\n");}
+		| IF '(' cond ')' line				{printf("If Found\n");}
+		| IF '(' cond ')' block ELSE block	{printf("If eLSE Found\n");}
+		| IF '(' cond ')' line ELSE block	{printf("If eLSE Found\n");}
+		| IF '(' cond ')' line ELSE line	{printf("If eLSE Found\n");}
+		| IF '(' cond ')' block ELSE line	{printf("If eLSE Found\n");};
 
 WhileStm: WHILE '(' cond ')' block
 		  | WHILE '(' cond ')' line;

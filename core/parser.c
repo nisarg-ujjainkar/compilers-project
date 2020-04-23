@@ -1288,56 +1288,104 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 28:
+        case 6:
+#line 59 "parser.y" /* yacc.c:1646  */
+    {printf("While Found\n");}
+#line 1295 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 61 "parser.y" /* yacc.c:1646  */
+    {printf("Assignment Found\n");}
+#line 1301 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 10:
+#line 65 "parser.y" /* yacc.c:1646  */
+    {printf("If Found\n");}
+#line 1307 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 66 "parser.y" /* yacc.c:1646  */
+    {printf("If Found\n");}
+#line 1313 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 67 "parser.y" /* yacc.c:1646  */
+    {printf("If eLSE Found\n");}
+#line 1319 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 68 "parser.y" /* yacc.c:1646  */
+    {printf("If eLSE Found\n");}
+#line 1325 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 69 "parser.y" /* yacc.c:1646  */
+    {printf("If eLSE Found\n");}
+#line 1331 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 70 "parser.y" /* yacc.c:1646  */
+    {printf("If eLSE Found\n");}
+#line 1337 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
 #line 88 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[0].tptr)->value; }
-#line 1295 "y.tab.c" /* yacc.c:1646  */
+#line 1343 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
 #line 89 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[0].val); }
-#line 1301 "y.tab.c" /* yacc.c:1646  */
+#line 1349 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
 #line 90 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[-2].val) + (yyvsp[0].val); }
-#line 1307 "y.tab.c" /* yacc.c:1646  */
+#line 1355 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 91 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[-2].val) - (yyvsp[0].val); }
-#line 1313 "y.tab.c" /* yacc.c:1646  */
+#line 1361 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 92 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[-2].val) * (yyvsp[0].val); }
-#line 1319 "y.tab.c" /* yacc.c:1646  */
+#line 1367 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 93 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[-2].val) / (yyvsp[0].val); }
-#line 1325 "y.tab.c" /* yacc.c:1646  */
+#line 1373 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 94 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = -(yyvsp[0].val); }
-#line 1331 "y.tab.c" /* yacc.c:1646  */
+#line 1379 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 95 "parser.y" /* yacc.c:1646  */
     { (yyval.val) = (yyvsp[-1].val); }
-#line 1337 "y.tab.c" /* yacc.c:1646  */
+#line 1385 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1341 "y.tab.c" /* yacc.c:1646  */
+#line 1389 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
