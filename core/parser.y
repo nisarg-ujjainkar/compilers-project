@@ -7,21 +7,20 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 #include<string.h>
 #include<stdlib.h>  
 #include<ctype.h>
-#include<math.h>
 #include<stdbool.h>
 #include "table.h"  /* Contains definition of `symrec'        */
+#include "ast.h"  /* Info for ast */
 int  yylex(void);
 void yyerror (char  *); 
 %}
 %union {
-int integer;
 double val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
+AST *ast
 }
 
 
 
-%token <inte> INT
 %token  <val> NUM        /* Simple double precision number   */
 %token <tptr> VAR   /* Variable and Function            */
 %token WHILE
@@ -50,27 +49,22 @@ struct symrec  *tptr;   /* For returning symbol-table pointers      */
 /* Grammar follows */
 
 %%
-code:	/* Empty */
-		| code line
-		| code block;
+code:	/* Empty */		{$$=0;}
+		| code line;
 
-block:	'{' code '}';
+block:	'{' code '}'	{$$=$2;};
 
-line:	WhileStm				{printf("While Found\n");}
-		| IfStm					
-		| assn ';'				{printf("Assignment Found\n");};
+line:	WhileStm				{$$=$1;printf("While Found on line %d\n",lineNum);}
+		| IfStm					{$$=$1;}
+		| block					{$$=$1;}
+		| assn ';'				{$$=$1;printf("Assignment Found on line %d\n",lineNum);};
 
-assn: exp '=' exp;
+assn: VAR '=' exp;
 
-IfStm:	IF '(' cond ')' block				{printf("If Found\n");}
-		| IF '(' cond ')' line				{printf("If Found\n");}
-		| IF '(' cond ')' block ELSE block	{printf("If eLSE Found\n");}
-		| IF '(' cond ')' line ELSE block	{printf("If eLSE Found\n");}
-		| IF '(' cond ')' line ELSE line	{printf("If eLSE Found\n");}
-		| IF '(' cond ')' block ELSE line	{printf("If eLSE Found\n");};
-
-WhileStm: WHILE '(' cond ')' block
-		  | WHILE '(' cond ')' line;
+IfStm:	IF '(' cond ')' line				{printf("If Found on line %d\n",lineNum);}
+		| IF '(' cond ')' line ELSE line	{printf("If eLSE Found on line %d\n",lineNum);};	
+		
+WhileStm: WHILE '(' cond ')' line;
 
 cond:	cond join cond
 		| exp relop exp;
@@ -103,12 +97,12 @@ exp:	VAR						{ $$ = $1->value; }
 
 int main ()
 {
-   yyparse ();
+	yyparse ();
 }
 
 void yyerror (char *s)  /* Called by yyparse on error */
 {
-  printf ("%s\n", s);
+	printf ("%s\n", s);
 }
 
 

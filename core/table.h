@@ -1,4 +1,6 @@
 /* Data type for links in the chain of symbols.      */
+#ifndef TABLE_H
+#define TABLE_H
 struct symrec
 {
   char *name;  /* name of symbol                     */
@@ -17,3 +19,4 @@ extern int lineNum;
 symrec *putsym ();
 symrec *getsym ();
 
+#endif

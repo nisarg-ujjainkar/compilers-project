@@ -9,8 +9,8 @@ floatpt [0-9]+"."?[0-9]*
 integer [0-9]+
 id [a-zA-Z]+[a-zA-Z0-9_]*
 %%
-"while" return WHILE;
-"if"    return IF;
+"while" {printf("While line %d\n",lineNum); return WHILE;}
+"if"    {printf("IF line %d\n",lineNum); return IF;}
 "for"   return FOR;
 "else"  return ELSE;
 "<="    return LEQ;
