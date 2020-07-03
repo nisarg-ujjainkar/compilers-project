@@ -1,7 +1,7 @@
 /* 
 Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 */
-%error-verbose
+
 %{
 #include<stdio.h>
 #include<string.h>
@@ -10,13 +10,16 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 #include<stdbool.h>
 #include "table.h"  /* Contains definition of `symrec'        */
 #include "ast.h"  /* Info for ast */
+%define parse.error verbose;
 int  yylex(void);
 void yyerror (char  *); 
+AST **head;
 %}
 %union {
 double val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
-AST *ast
+AST *ast;
+char *op;
 }
 
 
@@ -27,7 +30,7 @@ AST *ast
 %token FOR
 %token IF
 %token ELSE
-%token GEQ
+/* %token GEQ
 %token LEQ
 %token GT
 %token LT
@@ -35,7 +38,11 @@ AST *ast
 %token NEQ
 %token AND
 %token OR
-%type  <val>  exp
+%token join relop */
+%type  <ast> exp code block lines assn IfStm WhileStm cond
+%token <op> GEQ LEQ GT LT EQ NEQ AND OR join relop
+//%type <op>	GEQ LEQ GT LT EQ NEQ AND OR join relop
+
 
 
 %left GEQ LEQ LT GT EQ NEQ
@@ -49,7 +56,8 @@ AST *ast
 /* Grammar follows */
 
 %%
-code:	/* Empty */		{$$=0;}
+
+code:	/* Empty */{$$->next=NULL;}
 		| code line;
 
 block:	'{' code '}'	{$$=$2;};
@@ -69,15 +77,15 @@ WhileStm: WHILE '(' cond ')' line;
 cond:	cond join cond
 		| exp relop exp;
 
-join:	AND
-		| OR;
+join:	AND		{$$=$1;}
+		| OR	{$$=$1;};
 
-relop:	GEQ 
-		| LEQ 
-		| LT 
-		| GT 
-		| EQ 
-		| NEQ;
+relop:	GEQ		{$$=$1;}
+		| LEQ 	{$$=$1;}
+		| LT 	{$$=$1;}
+		| GT	{$$=$1;}
+		| EQ 	{$$=$1;}
+		| NEQ	{$$=$1;};
 
 exp:	VAR						{ $$ = $1->value; }
 		| NUM					{ $$ = $1; }

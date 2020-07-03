@@ -3,10 +3,10 @@
 #define TABLE_H
 struct symrec
 {
-  char *name;  /* name of symbol                     */
-  int type;    /* type of symbol: either VAR or FNCT */
-  double value;           /* value of a VAR          */
-  struct symrec *next;    /* link field              */
+	char *name;  /* name of symbol                     */
+	int type;    /* type of symbol: either VAR or FNCT */
+  	double value;           /* value of a VAR          */
+  	struct symrec *next;    /* link field              */
 };
 
 typedef struct symrec symrec;
