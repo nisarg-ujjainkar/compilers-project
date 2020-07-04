@@ -4,7 +4,45 @@
 #include<stddef.h>
 #include"table.h"
 
-typedef struct AST
+struct Expression
+{
+    struct AST *left, *right;
+    char Operator;
+};
+struct Assignment
+{
+    symrec *variable;
+    struct AST *rhs;
+};
+struct While
+{
+    struct AST *cond;
+    struct AST *code;
+};
+struct If
+{
+    struct AST *cond;
+    struct AST *code;
+};
+struct IfElse
+{
+    struct AST *cond;
+    struct AST *codeif;
+    struct AST *codeelse;
+};
+struct condJoin
+{
+    struct AST *left;
+    struct AST *right;
+    char *op;
+};
+struct cond
+{
+    struct AST *left;
+    struct AST *right;
+    char *op;
+};
+struct AST
 {
     enum kind
     {
@@ -23,44 +61,13 @@ typedef struct AST
     {
         double val;
         symrec *variable;
-        struct
-        {
-            struct AST *left, *right;
-            char *Operator;
-        }Expression;
-        struct
-        {
-            symrec *variable;
-            struct AST *rhs;
-        }Assignment;
-        struct
-        {
-            struct AST *cond;
-            struct AST *code;
-        }While;
-        struct
-        {
-            struct AST *cond;
-            struct AST *code;
-        }If;
-        struct
-        {
-            struct AST *cond;
-            struct AST *codeif;
-            struct AST *codeelse;
-        }IfElse;
-        struct
-        {
-            struct AST *left;
-            struct AST *right;
-            char *op;
-        }condJoin;
-        struct
-        {
-            struct AST *left;
-            struct AST *right;
-            char *op;
-        }cond;
+        struct Expression Expression;
+        struct Assignment Assignment;
+        struct While While;
+        struct If If;
+        struct IfElse IfElse;
+        struct condJoin condJoin;
+        struct cond cond;
         struct
         {
             int count;
@@ -74,7 +81,7 @@ typedef struct AST AST;
 AST* genVariable(symrec *var);
 AST* genNumber(double val);
 AST* genExpression(AST *left, AST *right, char op);
-AST* genAssignmennt(symrec *var, AST *rhs);
+AST* genAssignment(symrec *var, AST *rhs);
 AST* genWhile(AST *cond, AST *code);
 AST* genIf(AST *cond, AST *code);
 AST* genIfElse(AST *cond, AST *ifCode, AST *elseCode);

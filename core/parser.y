@@ -10,7 +10,6 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 #include<stdbool.h>
 #include "table.h"  /* Contains definition of `symrec'        */
 #include "ast.h"  /* Info for ast */
-%define parse.error verbose;
 int  yylex(void);
 void yyerror (char  *); 
 AST **head;
@@ -22,8 +21,7 @@ AST *ast;
 char *op;
 }
 
-
-
+%define parse.error verbose
 %token  <val> NUM        /* Simple double precision number   */
 %token <tptr> VAR   /* Variable and Function            */
 %token WHILE
@@ -39,10 +37,10 @@ char *op;
 %token AND
 %token OR
 %token join relop */
-%type  <ast> exp code block lines assn IfStm WhileStm cond
-%token <op> GEQ LEQ GT LT EQ NEQ AND OR join relop
+%type  <ast> exp code block line assn IfStm WhileStm cond
+%token <op> GEQ LEQ GT LT EQ NEQ AND OR
+%type <op> join relop
 //%type <op>	GEQ LEQ GT LT EQ NEQ AND OR join relop
-
 
 
 %left GEQ LEQ LT GT EQ NEQ
@@ -57,25 +55,25 @@ char *op;
 
 %%
 
-code:	/* Empty */{$$->next=NULL;}
-		| code line;
+code:	/* Empty */
+		| code line		{$$=genLine($1,$2);};
 
 block:	'{' code '}'	{$$=$2;};
 
-line:	WhileStm				{$$=$1;printf("While Found on line %d\n",lineNum);}
+line:	WhileStm				{$$=$1;}
 		| IfStm					{$$=$1;}
 		| block					{$$=$1;}
-		| assn ';'				{$$=$1;printf("Assignment Found on line %d\n",lineNum);};
+		| assn ';'				{$$=$1;};
 
-assn: VAR '=' exp;
+assn: VAR '=' exp		{$$=genAssignment($1,$3);};
 
-IfStm:	IF '(' cond ')' line				{printf("If Found on line %d\n",lineNum);}
-		| IF '(' cond ')' line ELSE line	{printf("If eLSE Found on line %d\n",lineNum);};	
+IfStm:	IF '(' cond ')' line				{$$=genIf($3,$5);}
+		| IF '(' cond ')' line ELSE line	{$$=genIfElse($3,$5,$7);};	
 		
-WhileStm: WHILE '(' cond ')' line;
+WhileStm: WHILE '(' cond ')' line			{$$=genWhile($3,$5);};
 
-cond:	cond join cond
-		| exp relop exp;
+cond:	cond join cond			{$$=genCondJoin($1,$3,$2);}
+		| exp relop exp			{$$=genCond($1,$3,$2);};
 
 join:	AND		{$$=$1;}
 		| OR	{$$=$1;};
@@ -87,13 +85,13 @@ relop:	GEQ		{$$=$1;}
 		| EQ 	{$$=$1;}
 		| NEQ	{$$=$1;};
 
-exp:	VAR						{ $$ = $1->value; }
-		| NUM					{ $$ = $1; }
-		| exp '+' exp			{ $$ = $1 + $3; }
-		| exp '-' exp			{ $$ = $1 - $3; }
-		| exp '*' exp			{ $$ = $1 * $3; }
-		| exp '/' exp			{ $$ = $1 / $3; }
-		| '-' exp %prec NEG		{ $$ = -$2; }
+exp:	VAR						{ $$=genVariable($1); }
+		| NUM					{ $$=genNumber($1); }
+		| exp '+' exp			{ $$=genExpression($1,$3,'+'); }
+		| exp '-' exp			{ $$=genExpression($1,$3,'-'); }
+		| exp '*' exp			{ $$=genExpression($1,$3,'*'); }
+		| exp '/' exp			{ $$=genExpression($1,$3,'/'); }
+		| '-' exp %prec NEG		{ $$=genExpression(NULL,$2,'-'); }
 		| '(' exp ')'			{ $$ = $2; }
 
 /* End of grammar */

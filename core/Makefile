@@ -1,5 +1,5 @@
 ccc: parser.c lexer.c
-	cc parser.c lexer.c -o ccc -lfl
+	cc parser.c lexer.c ast.c -o ccc -lfl
 
 paeser.c: parser.y
 	bison -d -o parser.c parser.y

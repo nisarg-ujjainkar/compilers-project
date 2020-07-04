@@ -29,7 +29,7 @@ AST* genExpression(AST *left, AST *right, char op)
     return node;
 }
 
-AST* genAssignmennt(symrec *var, AST *rhs)
+AST* genAssignment(symrec *var, AST *rhs)
 {
     AST *node=malloc(sizeof(AST));
     node->Kind=A_Assn;
@@ -63,6 +63,26 @@ AST* genIfElse(AST *cond, AST *ifCode, AST *elseCode)
     node->node.IfElse.codeelse=elseCode;
     node->node.IfElse.codeif=ifCode;
     node->node.IfElse.cond=cond;
+    return node;
+}
+
+AST* genCondJoin(AST *left, AST *right, char *op)
+{
+    AST *node=malloc(sizeof(AST));
+    node->Kind=A_condJoin;
+    node->node.condJoin.left=left;
+    node->node.condJoin.right=right;
+    node->node.condJoin.op=op;
+    return node;
+}
+
+AST* genCond(AST *left, AST *right, char *op)
+{
+    AST *node=malloc(sizeof(AST));
+    node->Kind=A_cond;
+    node->node.cond.left=left;
+    node->node.cond.right=right;
+    node->node.cond.op=op;
     return node;
 }
 
