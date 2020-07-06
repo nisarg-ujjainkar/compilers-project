@@ -5,6 +5,7 @@
 
 AST* genVariable(symrec *var)
 {
+    printf("generating Variablr\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_var;
     node->node.variable=var;
@@ -13,6 +14,7 @@ AST* genVariable(symrec *var)
 
 AST* genNumber(double val)
 {
+    printf("generating Number\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_num;
     node->node.val=val;
@@ -21,6 +23,7 @@ AST* genNumber(double val)
 
 AST* genExpression(AST *left, AST *right, char op)
 {
+    printf("generating Expression\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_Exp;
     node->node.Expression.left=left;
@@ -31,6 +34,7 @@ AST* genExpression(AST *left, AST *right, char op)
 
 AST* genAssignment(symrec *var, AST *rhs)
 {
+    printf("generating Assignmentn");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_Assn;
     node->node.Assignment.rhs=rhs;
@@ -40,6 +44,7 @@ AST* genAssignment(symrec *var, AST *rhs)
 
 AST* genWhile(AST *cond, AST *code)
 {
+    printf("generating While\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_WhileStm;
     node->node.While.code=code;
@@ -49,6 +54,7 @@ AST* genWhile(AST *cond, AST *code)
 
 AST* genIf(AST *cond, AST *code)
 {
+    printf("generating If\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_IfStm;
     node->node.If.code=code;
@@ -58,6 +64,7 @@ AST* genIf(AST *cond, AST *code)
 
 AST* genIfElse(AST *cond, AST *ifCode, AST *elseCode)
 {
+    printf("generating If Else\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_IfElse;
     node->node.IfElse.codeelse=elseCode;
@@ -68,6 +75,7 @@ AST* genIfElse(AST *cond, AST *ifCode, AST *elseCode)
 
 AST* genCondJoin(AST *left, AST *right, char *op)
 {
+    printf("generating Cond Join\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_condJoin;
     node->node.condJoin.left=left;
@@ -78,6 +86,7 @@ AST* genCondJoin(AST *left, AST *right, char *op)
 
 AST* genCond(AST *left, AST *right, char *op)
 {
+    printf("generating Cond\n");
     AST *node=malloc(sizeof(AST));
     node->Kind=A_cond;
     node->node.cond.left=left;
@@ -88,6 +97,7 @@ AST* genCond(AST *left, AST *right, char *op)
 
 AST* genLine(AST *head, AST *next)
 {
+    printf("generating new node\n");
     if(!head)
     {
         head=malloc(sizeof(AST));
@@ -96,7 +106,7 @@ AST* genLine(AST *head, AST *next)
         head->node.next.next=NULL;
     }
     head->node.next.count++;
-    head->node.next.next=realloc(head->node.next.next,head->node.next.count*sizeof(AST*));
+    head->node.next.next=realloc(*head->node.next.next,head->node.next.count*sizeof(AST*));
     head->node.next.next[head->node.next.count-1]=next;
     return head;
 }

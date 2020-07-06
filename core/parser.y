@@ -12,12 +12,12 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 #include "ast.h"  /* Info for ast */
 int  yylex(void);
 void yyerror (char  *); 
-AST **head;
+AST *head=NULL;
 %}
 %union {
 double val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
-AST *ast;
+struct AST *ast;
 char *op;
 }
 
@@ -37,7 +37,7 @@ char *op;
 %token AND
 %token OR
 %token join relop */
-%type  <ast> exp code block line assn IfStm WhileStm cond
+%type  <ast> exp code block line assn IfStm WhileStm cond program
 %token <op> GEQ LEQ GT LT EQ NEQ AND OR
 %type <op> join relop
 //%type <op>	GEQ LEQ GT LT EQ NEQ AND OR join relop
@@ -54,6 +54,8 @@ char *op;
 /* Grammar follows */
 
 %%
+
+program: code			{head=$1;};
 
 code:	/* Empty */
 		| code line		{$$=genLine($1,$2);};
@@ -92,7 +94,7 @@ exp:	VAR						{ $$=genVariable($1); }
 		| exp '*' exp			{ $$=genExpression($1,$3,'*'); }
 		| exp '/' exp			{ $$=genExpression($1,$3,'/'); }
 		| '-' exp %prec NEG		{ $$=genExpression(NULL,$2,'-'); }
-		| '(' exp ')'			{ $$ = $2; }
+		| '(' exp ')'			{ $$ = $2; };
 
 /* End of grammar */
 %%
@@ -108,7 +110,7 @@ int main ()
 
 void yyerror (char *s)  /* Called by yyparse on error */
 {
-	printf ("%s\n", s);
+	printf ("Line %d: %s\n", lineNum,s);
 }
 
 

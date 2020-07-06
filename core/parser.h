@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_PARSER_H_INCLUDED
 # define YY_YY_PARSER_H_INCLUDED
 /* Debug traces.  */
@@ -45,39 +49,38 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    INT = 258,
-    NUM = 259,
-    VAR = 260,
-    WHILE = 261,
-    FOR = 262,
-    IF = 263,
-    ELSE = 264,
-    GEQ = 265,
-    LEQ = 266,
-    GT = 267,
-    LT = 268,
-    EQ = 269,
-    NEQ = 270,
-    AND = 271,
-    OR = 272,
-    NEG = 273
+    NUM = 258,
+    VAR = 259,
+    WHILE = 260,
+    FOR = 261,
+    IF = 262,
+    ELSE = 263,
+    GEQ = 264,
+    LEQ = 265,
+    GT = 266,
+    LT = 267,
+    EQ = 268,
+    NEQ = 269,
+    AND = 270,
+    OR = 271,
+    NEG = 272
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 16 "parser.y" /* yacc.c:1909  */
+#line 17 "parser.y"
 
-int integer;
 double val;  /* For returning numbers.                   */
 struct symrec  *tptr;   /* For returning symbol-table pointers      */
+struct AST *ast;
+char *op;
 
-#line 79 "parser.h" /* yacc.c:1909  */
+#line 82 "parser.h"
+
 };
-
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

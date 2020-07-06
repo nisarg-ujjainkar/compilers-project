@@ -78,6 +78,8 @@ struct AST
 
 typedef struct AST AST;
 
+extern AST *head;
+
 AST* genVariable(symrec *var);
 AST* genNumber(double val);
 AST* genExpression(AST *left, AST *right, char op);
