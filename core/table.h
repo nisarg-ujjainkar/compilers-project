@@ -16,7 +16,7 @@ extern symrec *sym_table;
 
 extern int lineNum;
 
-symrec *putsym ();
-symrec *getsym ();
+symrec *putsym (char*,int);
+symrec *getsym (char*);
 
 #endif

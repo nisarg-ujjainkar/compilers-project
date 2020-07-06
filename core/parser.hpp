@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_PARSER_H_INCLUDED
-# define YY_YY_PARSER_H_INCLUDED
+#ifndef YY_YY_PARSER_HPP_INCLUDED
+# define YY_YY_PARSER_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -71,14 +71,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "parser.y"
+#line 18 "parser.y"
 
-double val;  /* For returning numbers.                   */
-struct symrec  *tptr;   /* For returning symbol-table pointers      */
-struct AST *ast;
-char *op;
+	double val;  /* For returning numbers.                   */
+	struct symrec *tptr;   /* For returning symbol-table pointers      */
+	struct AST::AST *ast;
+	char *op;
 
-#line 82 "parser.h"
+#line 82 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -91,4 +91,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PARSER_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_HPP_INCLUDED  */

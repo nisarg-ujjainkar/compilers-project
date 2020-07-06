@@ -1,6 +1,6 @@
-#line 2 "lexer.c"
+#line 2 "lexer.cpp"
 
-#line 4 "lexer.c"
+#line 4 "lexer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -468,13 +468,14 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
-#include "parser.h"
-#include "table.h"
-#include <stdlib.h>
-symrec *sym_table = (symrec *)0;
-int lineNum=0;
-#line 477 "lexer.c"
-#line 478 "lexer.c"
+	#include "ast.h"
+	#include "parser.hpp"
+	#include "table.h"
+	#include <stdlib.h>
+	symrec *sym_table = (symrec *)0;
+	int lineNum=0;
+#line 478 "lexer.cpp"
+#line 479 "lexer.cpp"
 
 #define INITIAL 0
 
@@ -691,9 +692,9 @@ YY_DECL
 		}
 
 	{
-#line 11 "lexer.l"
+#line 12 "lexer.l"
 
-#line 697 "lexer.c"
+#line 698 "lexer.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -752,96 +753,96 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "lexer.l"
+#line 13 "lexer.l"
 {printf("While line %d\n",lineNum); return WHILE;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 13 "lexer.l"
+#line 14 "lexer.l"
 {printf("IF line %d\n",lineNum); return IF;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 14 "lexer.l"
+#line 15 "lexer.l"
 return FOR;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 15 "lexer.l"
+#line 16 "lexer.l"
 return ELSE;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "lexer.l"
+#line 17 "lexer.l"
 return LEQ;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 17 "lexer.l"
+#line 18 "lexer.l"
 return GEQ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 18 "lexer.l"
+#line 19 "lexer.l"
 return GT;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 19 "lexer.l"
+#line 20 "lexer.l"
 return LT;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 21 "lexer.l"
 return EQ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 22 "lexer.l"
 return NEQ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 23 "lexer.l"
 return AND;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 24 "lexer.l"
 return OR;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 25 "lexer.l"
 {sscanf(yytext,"%lf",&yylval.val);return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 25 "lexer.l"
+#line 26 "lexer.l"
 {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 26 "lexer.l"
+#line 27 "lexer.l"
 {/* Remove White Space */}
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 27 "lexer.l"
+#line 28 "lexer.l"
 {lineNum++;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 28 "lexer.l"
+#line 29 "lexer.l"
 {return yytext[0];}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 29 "lexer.l"
+#line 30 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 845 "lexer.c"
+#line 846 "lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1846,29 +1847,31 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 29 "lexer.l"
+#line 30 "lexer.l"
 
 
 /* The symbol table: a chain of `struct symrec'.  */
 
 
-symrec * putsym (char *sym_name,int sym_type){
-  symrec *ptr;
-  ptr = (symrec *) malloc (sizeof (symrec));
-  ptr->name = (char *) malloc (strlen (sym_name) + 1);
-  strcpy (ptr->name,sym_name);
-  ptr->type = sym_type;
-  ptr->value = 0; /* set value to 0 even if fctn.  */
-  ptr->next = (struct symrec *)sym_table;
-  sym_table = ptr;
-  return ptr;
+symrec * putsym (char *sym_name,int sym_type)
+{
+    symrec *ptr;
+    ptr = (symrec *) malloc (sizeof (symrec));
+    ptr->name = (char *) malloc (strlen (sym_name) + 1);
+    strcpy (ptr->name,sym_name);
+    ptr->type = sym_type;
+    ptr->value = 0; /* set value to 0 even if fctn.  */
+    ptr->next = (struct symrec *)sym_table;
+    sym_table = ptr;
+    return ptr;
 }
 
-symrec *getsym (char *sym_name){
-  symrec *ptr;
-  for (ptr = sym_table; ptr != (symrec *) 0;
-       ptr = (symrec *)ptr->next)
+symrec *getsym (char *sym_name)
+{
+    symrec *ptr;
+    for(ptr = sym_table; ptr != (symrec *) 0;
+    ptr = (symrec *)ptr->next)
     if (strcmp (ptr->name,sym_name) == 0)
-      return ptr;
-  return 0;
+    	return ptr;
+    return 0;
 }
