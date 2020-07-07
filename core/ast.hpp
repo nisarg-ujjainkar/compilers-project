@@ -2,13 +2,11 @@
 #define AST_H
 
 #include<stddef.h>
-#include"table.h"
+#include"table.hpp"
 #include<iostream>
 #include<vector>
 using namespace std;
 
-namespace AST
-{
     struct Expression
     {
         struct AST *left, *right;
@@ -88,7 +86,7 @@ namespace AST
     AST* genCond(AST *left, AST *right, char *op);
     AST* genCondJoin(AST *left, AST *right, char *op);
     AST* genLine(AST *head, AST *next);
-}
-extern vector<AST::AST*> head;
+
+extern vector<AST*> head;
 
 #endif

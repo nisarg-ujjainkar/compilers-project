@@ -1,8 +1,9 @@
 %{
-	#include "ast.h"
+	#include "ast.hpp"
 	#include "parser.hpp"
-	#include "table.h"
+	#include "table.hpp"
 	#include <stdlib.h>
+    #define YY_DECL extern "C" int yylex()
 	symrec *sym_table = (symrec *)0;
 	int lineNum=0;
 %}
@@ -10,8 +11,8 @@ floatpt [0-9]+"."?[0-9]*
 integer [0-9]+
 id [a-zA-Z]+[a-zA-Z0-9_]*
 %%
-"while" {printf("While line %d\n",lineNum); return WHILE;}
-"if"    {printf("IF line %d\n",lineNum); return IF;}
+"while" {return WHILE;}
+"if"    {return IF;}
 "for"   return FOR;
 "else"  return ELSE;
 "<="    return LEQ;

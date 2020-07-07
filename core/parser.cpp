@@ -74,13 +74,19 @@
 	#include<ctype.h>
 	#include<stdbool.h>
 	#include<vector>
-	#include "ast.h"  /* Info for ast */
-	#include "table.h"  /* Contains definition of `symrec'        */
-	int  yylex(void);
+	#include "ast.hpp"  /* Info for ast */
+	#include "table.hpp"  /* Contains definition of `symrec'        */
+	// #ifdef __cplusplus  
+	// extern "C" { 
+	// #endif
+	extern "C" int yylex();  
 	void yyerror (const char *); 
-	std::vector<AST::AST*> head;
+	// #ifdef __cplusplus 
+	// } 
+	// #endif
+	std::vector<AST*> head;
 
-#line 84 "parser.cpp"
+#line 90 "parser.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -150,14 +156,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "parser.y"
+#line 24 "parser.y"
 
 	double val;  /* For returning numbers.                   */
 	struct symrec *tptr;   /* For returning symbol-table pointers      */
-	struct AST::AST *ast;
+	struct AST *ast;
 	char *op;
 
-#line 161 "parser.cpp"
+#line 167 "parser.cpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -534,10 +540,10 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    60,    60,    61,    63,    65,    66,    67,    68,    70,
-      72,    73,    75,    77,    78,    80,    81,    83,    84,    85,
-      86,    87,    88,    90,    91,    92,    93,    94,    95,    96,
-      97
+       0,    66,    66,    67,    69,    71,    72,    73,    74,    76,
+      78,    79,    81,    83,    84,    86,    87,    89,    90,    91,
+      92,    93,    94,    96,    97,    98,    99,   100,   101,   102,
+     103
 };
 #endif
 
@@ -1364,175 +1370,175 @@ yyreduce:
   switch (yyn)
     {
   case 3:
-#line 61 "parser.y"
+#line 67 "parser.y"
                                         {head.push_back((yyvsp[-1].ast));}
-#line 1370 "parser.cpp"
-    break;
-
-  case 4:
-#line 63 "parser.y"
-                        {(yyval.ast)=(yyvsp[-1].ast);}
 #line 1376 "parser.cpp"
     break;
 
-  case 5:
-#line 65 "parser.y"
-                                                {(yyval.ast)=(yyvsp[0].ast);}
+  case 4:
+#line 69 "parser.y"
+                        {(yyval.ast)=(yyvsp[-1].ast);}
 #line 1382 "parser.cpp"
     break;
 
-  case 6:
-#line 66 "parser.y"
-                                                        {(yyval.ast)=(yyvsp[0].ast);}
+  case 5:
+#line 71 "parser.y"
+                                                {(yyval.ast)=(yyvsp[0].ast);}
 #line 1388 "parser.cpp"
     break;
 
-  case 7:
-#line 67 "parser.y"
+  case 6:
+#line 72 "parser.y"
                                                         {(yyval.ast)=(yyvsp[0].ast);}
 #line 1394 "parser.cpp"
     break;
 
-  case 8:
-#line 68 "parser.y"
-                                                        {(yyval.ast)=(yyvsp[-1].ast);}
+  case 7:
+#line 73 "parser.y"
+                                                        {(yyval.ast)=(yyvsp[0].ast);}
 #line 1400 "parser.cpp"
     break;
 
-  case 9:
-#line 70 "parser.y"
-                                {(yyval.ast)=AST::genAssignment((yyvsp[-2].tptr),(yyvsp[0].ast));}
+  case 8:
+#line 74 "parser.y"
+                                                        {(yyval.ast)=(yyvsp[-1].ast);}
 #line 1406 "parser.cpp"
     break;
 
-  case 10:
-#line 72 "parser.y"
-                                                        {(yyval.ast)=AST::genIf((yyvsp[-2].ast),(yyvsp[0].ast));}
+  case 9:
+#line 76 "parser.y"
+                                {(yyval.ast)=genAssignment((yyvsp[-2].tptr),(yyvsp[0].ast));}
 #line 1412 "parser.cpp"
     break;
 
-  case 11:
-#line 73 "parser.y"
-                                                        {(yyval.ast)=AST::genIfElse((yyvsp[-4].ast),(yyvsp[-2].ast),(yyvsp[0].ast));}
+  case 10:
+#line 78 "parser.y"
+                                                        {(yyval.ast)=genIf((yyvsp[-2].ast),(yyvsp[0].ast));}
 #line 1418 "parser.cpp"
     break;
 
-  case 12:
-#line 75 "parser.y"
-                                                        {(yyval.ast)=AST::genWhile((yyvsp[-2].ast),(yyvsp[0].ast));}
+  case 11:
+#line 79 "parser.y"
+                                                        {(yyval.ast)=genIfElse((yyvsp[-4].ast),(yyvsp[-2].ast),(yyvsp[0].ast));}
 #line 1424 "parser.cpp"
     break;
 
-  case 13:
-#line 77 "parser.y"
-                                        {(yyval.ast)=AST::genCondJoin((yyvsp[-2].ast),(yyvsp[0].ast),(yyvsp[-1].op));}
+  case 12:
+#line 81 "parser.y"
+                                                        {(yyval.ast)=genWhile((yyvsp[-2].ast),(yyvsp[0].ast));}
 #line 1430 "parser.cpp"
     break;
 
-  case 14:
-#line 78 "parser.y"
-                                                {(yyval.ast)=AST::genCond((yyvsp[-2].ast),(yyvsp[0].ast),(yyvsp[-1].op));}
+  case 13:
+#line 83 "parser.y"
+                                        {(yyval.ast)=genCondJoin((yyvsp[-2].ast),(yyvsp[0].ast),(yyvsp[-1].op));}
 #line 1436 "parser.cpp"
     break;
 
-  case 15:
-#line 80 "parser.y"
-                        {(yyval.op)=(yyvsp[0].op);}
+  case 14:
+#line 84 "parser.y"
+                                                {(yyval.ast)=genCond((yyvsp[-2].ast),(yyvsp[0].ast),(yyvsp[-1].op));}
 #line 1442 "parser.cpp"
     break;
 
-  case 16:
-#line 81 "parser.y"
+  case 15:
+#line 86 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1448 "parser.cpp"
     break;
 
-  case 17:
-#line 83 "parser.y"
+  case 16:
+#line 87 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1454 "parser.cpp"
     break;
 
-  case 18:
-#line 84 "parser.y"
+  case 17:
+#line 89 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1460 "parser.cpp"
     break;
 
-  case 19:
-#line 85 "parser.y"
+  case 18:
+#line 90 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1466 "parser.cpp"
     break;
 
-  case 20:
-#line 86 "parser.y"
+  case 19:
+#line 91 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1472 "parser.cpp"
     break;
 
-  case 21:
-#line 87 "parser.y"
+  case 20:
+#line 92 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1478 "parser.cpp"
     break;
 
-  case 22:
-#line 88 "parser.y"
+  case 21:
+#line 93 "parser.y"
                         {(yyval.op)=(yyvsp[0].op);}
 #line 1484 "parser.cpp"
     break;
 
-  case 23:
-#line 90 "parser.y"
-                                                        { (yyval.ast)=AST::genVariable((yyvsp[0].tptr)); }
+  case 22:
+#line 94 "parser.y"
+                        {(yyval.op)=(yyvsp[0].op);}
 #line 1490 "parser.cpp"
     break;
 
-  case 24:
-#line 91 "parser.y"
-                                                        { (yyval.ast)=AST::genNumber((yyvsp[0].val)); }
+  case 23:
+#line 96 "parser.y"
+                                                        { (yyval.ast)=genVariable((yyvsp[0].tptr)); }
 #line 1496 "parser.cpp"
     break;
 
-  case 25:
-#line 92 "parser.y"
-                                                { (yyval.ast)=AST::genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'+'); }
+  case 24:
+#line 97 "parser.y"
+                                                        { (yyval.ast)=genNumber((yyvsp[0].val)); }
 #line 1502 "parser.cpp"
     break;
 
-  case 26:
-#line 93 "parser.y"
-                                                { (yyval.ast)=AST::genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'-'); }
+  case 25:
+#line 98 "parser.y"
+                                                { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'+'); }
 #line 1508 "parser.cpp"
     break;
 
-  case 27:
-#line 94 "parser.y"
-                                                { (yyval.ast)=AST::genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'*'); }
+  case 26:
+#line 99 "parser.y"
+                                                { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'-'); }
 #line 1514 "parser.cpp"
     break;
 
-  case 28:
-#line 95 "parser.y"
-                                                { (yyval.ast)=AST::genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'/'); }
+  case 27:
+#line 100 "parser.y"
+                                                { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'*'); }
 #line 1520 "parser.cpp"
     break;
 
-  case 29:
-#line 96 "parser.y"
-                                                { (yyval.ast)=AST::genExpression(NULL,(yyvsp[0].ast),'-'); }
+  case 28:
+#line 101 "parser.y"
+                                                { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'/'); }
 #line 1526 "parser.cpp"
     break;
 
-  case 30:
-#line 97 "parser.y"
-                                                { (yyval.ast) = (yyvsp[-1].ast); }
+  case 29:
+#line 102 "parser.y"
+                                                { (yyval.ast)=genExpression(NULL,(yyvsp[0].ast),'-'); }
 #line 1532 "parser.cpp"
     break;
 
+  case 30:
+#line 103 "parser.y"
+                                                { (yyval.ast) = (yyvsp[-1].ast); }
+#line 1538 "parser.cpp"
+    break;
 
-#line 1536 "parser.cpp"
+
+#line 1542 "parser.cpp"
 
       default: break;
     }
@@ -1764,7 +1770,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 100 "parser.y"
+#line 106 "parser.y"
 
 
 

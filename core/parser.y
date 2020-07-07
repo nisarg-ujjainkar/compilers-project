@@ -8,17 +8,23 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 	#include<ctype.h>
 	#include<stdbool.h>
 	#include<vector>
-	#include "ast.h"  /* Info for ast */
-	#include "table.h"  /* Contains definition of `symrec'        */
-	int  yylex(void);
+	#include "ast.hpp"  /* Info for ast */
+	#include "table.hpp"  /* Contains definition of `symrec'        */
+	// #ifdef __cplusplus  
+	// extern "C" { 
+	// #endif
+	extern "C" int yylex();  
 	void yyerror (const char *); 
-	std::vector<AST::AST*> head;
+	// #ifdef __cplusplus 
+	// } 
+	// #endif
+	std::vector<AST*> head;
 %}
 %union 
 {
 	double val;  /* For returning numbers.                   */
 	struct symrec *tptr;   /* For returning symbol-table pointers      */
-	struct AST::AST *ast;
+	struct AST *ast;
 	char *op;
 }
 
@@ -67,15 +73,15 @@ line:	WhileStm				{$$=$1;}
 		| block					{$$=$1;}
 		| assn ';'				{$$=$1;};
 
-assn: VAR '=' exp		{$$=AST::genAssignment($1,$3);};
+assn: VAR '=' exp		{$$=genAssignment($1,$3);};
 
-IfStm:	IF '(' cond ')' line				{$$=AST::genIf($3,$5);}
-		| IF '(' cond ')' line ELSE line	{$$=AST::genIfElse($3,$5,$7);};	
+IfStm:	IF '(' cond ')' line				{$$=genIf($3,$5);}
+		| IF '(' cond ')' line ELSE line	{$$=genIfElse($3,$5,$7);};	
 		
-WhileStm: WHILE '(' cond ')' line			{$$=AST::genWhile($3,$5);};
+WhileStm: WHILE '(' cond ')' line			{$$=genWhile($3,$5);};
 
-cond:	cond join cond			{$$=AST::genCondJoin($1,$3,$2);}
-		| exp relop exp			{$$=AST::genCond($1,$3,$2);};
+cond:	cond join cond			{$$=genCondJoin($1,$3,$2);}
+		| exp relop exp			{$$=genCond($1,$3,$2);};
 
 join:	AND		{$$=$1;}
 		| OR	{$$=$1;};
@@ -87,13 +93,13 @@ relop:	GEQ		{$$=$1;}
 		| EQ 	{$$=$1;}
 		| NEQ	{$$=$1;};
 
-exp:	VAR						{ $$=AST::genVariable($1); }
-		| NUM					{ $$=AST::genNumber($1); }
-		| exp '+' exp			{ $$=AST::genExpression($1,$3,'+'); }
-		| exp '-' exp			{ $$=AST::genExpression($1,$3,'-'); }
-		| exp '*' exp			{ $$=AST::genExpression($1,$3,'*'); }
-		| exp '/' exp			{ $$=AST::genExpression($1,$3,'/'); }
-		| '-' exp %prec NEG		{ $$=AST::genExpression(NULL,$2,'-'); }
+exp:	VAR						{ $$=genVariable($1); }
+		| NUM					{ $$=genNumber($1); }
+		| exp '+' exp			{ $$=genExpression($1,$3,'+'); }
+		| exp '-' exp			{ $$=genExpression($1,$3,'-'); }
+		| exp '*' exp			{ $$=genExpression($1,$3,'*'); }
+		| exp '/' exp			{ $$=genExpression($1,$3,'/'); }
+		| '-' exp %prec NEG		{ $$=genExpression(NULL,$2,'-'); }
 		| '(' exp ')'			{ $$ = $2; };
 
 /* End of grammar */

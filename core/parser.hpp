@@ -71,11 +71,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "parser.y"
+#line 24 "parser.y"
 
 	double val;  /* For returning numbers.                   */
 	struct symrec *tptr;   /* For returning symbol-table pointers      */
-	struct AST::AST *ast;
+	struct AST *ast;
 	char *op;
 
 #line 82 "parser.hpp"
