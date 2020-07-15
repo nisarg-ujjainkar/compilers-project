@@ -1,6 +1,7 @@
 #include<iostream>
 #include<stdlib.h>
 #include<stdio.h>
+#include<iterator>
 #include"translate.hpp"
 #include"table.hpp"
 #include<string.h>
@@ -476,41 +477,27 @@ void TranslatorMain(vector<AST*>::iterator &it1,vector<AST*>::iterator &it2)
         cout<<"wrong case"<<endl;
         exit(1);
     }
-    if((*it2)->Kind==AST::A_WhileStm)
+    if(*it1==*it2)
     {
-        bool codeIsLine=false;
-        if((*it1)==(*it2))
-        {
-            codeIsLine=true;
-            it1++;
-            // it2++;
-            TranslatorMain(it1,it2);
-        }
-        if(codeIsLine==true)
-            it2++;
-        auto tmp1=*(whileStack.rbegin());
-        whileStack.pop_back();
-        auto tmp2=*(whileStack.rbegin());
-        whileStack.pop_back();
-        string ins="\tB ";
-        ins.append(tmp2);
-        instructions.push_back(ins);
-        instructions.push_back(tmp1);
+        advance(it1,1);
+        advance(it2,1);
+        TranslatorMain(it1,it2);
     }
-    if((*it2)->Kind==AST::A_IfStm)
-    {
-        bool codeIsLine=false;
-        if((*it1)==(*it2))
-        {
-            codeIsLine=true;
-            it1++;
-            // it2++;
-            TranslatorMain(it1,it2);
-        }
-        if(codeIsLine==true)
-            it2++;
-        auto tmp1=(*ifStack.rbegin());
-        ifStack.pop_back();
-        instructions.push_back(tmp1);
-    }
+    // if((*it2)->Kind==AST::A_WhileStm)
+    // {
+    //     auto tmp1=*(whileStack.rbegin());
+    //     whileStack.pop_back();
+    //     auto tmp2=*(whileStack.rbegin());
+    //     whileStack.pop_back();
+    //     string ins="\tB ";
+    //     ins.append(tmp2);
+    //     instructions.push_back(ins);
+    //     instructions.push_back(tmp1);
+    // }
+    // if((*it2)->Kind==AST::A_IfStm)
+    // {
+    //     auto tmp1=(*ifStack.rbegin());
+    //     ifStack.pop_back();
+    //     instructions.push_back(tmp1);
+    // }
 }

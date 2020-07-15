@@ -38,16 +38,58 @@ int main()
     auto it2=head.begin();
     while(it1!=dest.end() and it2!=head.end())
     {
+        auto temp=it2;
         TranslatorMain(it1,it2);
+        while(temp!=it2)
+        {
+            if((*temp)->Kind==AST::A_WhileStm)
+            {
+                auto tmp1=*(whileStack.rbegin());
+                whileStack.pop_back();
+                auto tmp2=*(whileStack.rbegin());
+                whileStack.pop_back();
+                string ins="\tB ";
+                ins.append(tmp2);
+                instructions.push_back(ins);
+                instructions.push_back(tmp1);
+            }
+            if((*temp)->Kind==AST::A_IfStm)
+            {
+                auto tmp1=(*ifStack.rbegin());
+                ifStack.pop_back();
+                instructions.push_back(tmp1);
+            }
+            ++temp;
+        }
+        if((*it2)->Kind==AST::A_WhileStm)
+        {
+            auto tmp1=*(whileStack.rbegin());
+            whileStack.pop_back();
+            auto tmp2=*(whileStack.rbegin());
+            whileStack.pop_back();
+            string ins="\tB ";
+            ins.append(tmp2);
+            instructions.push_back(ins);
+            instructions.push_back(tmp1);
+        }
+        if((*it2)->Kind==AST::A_IfStm)
+        {
+            auto tmp1=(*ifStack.rbegin());
+            ifStack.pop_back();
+            instructions.push_back(tmp1);
+        }
         ++it1;
         ++it2;
     }
     fstream file;
     file.open("out.s",ios::trunc| ios::out);
+    file<<"AREA ASDF, CODE, READONLY"<<endl;
+    file<<"\tENTRY"<<endl;
     for(auto str:instructions)
     {
         file<<str<<endl;
     }
+    file<<"\tEND"<<endl;
     instructions.clear();
     location.clear();
     for(auto a:head)
