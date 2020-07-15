@@ -73,16 +73,20 @@ block:	'{' code '}'	{$$=$2;};
 line:	WhileStm				{$$=$1;}
 		| IfStm					{$$=$1;}
 		| IfElse				{$$=$1;}
-		| block					{$$=$1;}
 		| assn ';'				{$$=$1;};
 
-assn: VAR '=' exp		{$$=genAssignment($1,$3);};
+assn: VAR '=' exp				{$$=genAssignment($1,$3);};
 
-IfStm:	IF '(' cond ')' line				{$$=genIf($3,$5);};
+IfStm:	IF '(' cond ')' line				{head.push_back($5);$$=genIf($3,$5);}
+		| IF '(' cond ')' block				{$$=genIf($3,$5);};
 
-IfElse:	IF '(' cond ')' line ELSE line	{$$=genIfElse($3,$5,$7);};	
+IfElse:	IF '(' cond ')' line ELSE line			{head.push_back($5);$$=genIfElse($3,$5,$7);head.push_back($7);}	
+		| IF '(' cond ')' line ELSE block		{head.push_back($5);$$=genIfElse($3,$5,$7);}	
+		| IF '(' cond ')' block ELSE line		{$$=genIfElse($3,$5,$7);head.push_back($7);}	
+		| IF '(' cond ')' block ELSE block		{$$=genIfElse($3,$5,$7);}	
 		
-WhileStm: WHILE '(' cond ')' line			{$$=genWhile($3,$5);};
+WhileStm: WHILE '(' cond ')' line				{head.push_back($5);$$=genWhile($3,$5);}
+		  | WHILE '(' cond ')' block			{$$=genWhile($3,$5);};
 
 cond:	cond join cond			{$$=genCondJoin($1,$3,$2);}
 		| exp relop exp			{$$=genCond($1,$3,$2);};

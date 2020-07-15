@@ -25,6 +25,7 @@ int main()
         cout<<a->Kind;
     }
     cout<<endl;
+    exit(1);
     cout<<"parsing exps"<<endl;
     for(auto b:exps)
     {
