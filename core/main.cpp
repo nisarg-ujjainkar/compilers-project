@@ -7,7 +7,7 @@
 #include"translate.hpp"
 
 using namespace std;
-
+vector<AST*> expDest;
 
 int main()
 {
@@ -25,16 +25,15 @@ int main()
         cout<<a->Kind;
     }
     cout<<endl;
-    for(auto a:head)
+    cout<<"parsing exps"<<endl;
+    for(auto b:exps)
     {
-        if(a->Kind==AST::A_WhileStm)
-        {
-            cout<<"cond has type "<<a->node.While.cond->Kind<<endl;
-            cout<<"code has type "<<a->node.While.code->Kind<<endl;
-        }
+        cout<<b->Kind;
     }
+    cout<<endl;
+    filterExp(exps,expDest);
     cout<<"======================Translation====================="<<endl;
-    TranslatorMain(head,dest);
+    TranslatorMain(dest,head);
     fstream file;
     file.open("out.s",ios::trunc| ios::out);
     for(auto str:instructions)

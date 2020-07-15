@@ -88,5 +88,6 @@ using namespace std;
     AST* genLine(AST *head, AST *next);
 
 extern vector<AST*> head;
+extern vector<AST*> exps;
 
 #endif

@@ -19,6 +19,7 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 	// } 
 	// #endif
 	std::vector<AST*> head;
+	std::vector<AST*> exps;
 %}
 %union 
 {
@@ -103,13 +104,13 @@ relop:	GEQ		{$$=$1;}
 		| exp '=' '=' exp		{$$=genCond($1,$4,"==");}
 		| exp '!' '=' exp		{$$=genCond($1,$4,"!=");}; */
 
-exp:	VAR						{ $$=genVariable($1); }
-		| NUM					{ $$=genNumber($1); }
-		| exp '+' exp			{ $$=genExpression($1,$3,'+'); }
-		| exp '-' exp			{ $$=genExpression($1,$3,'-'); }
-		| exp '*' exp			{ $$=genExpression($1,$3,'*'); }
-		| exp '/' exp			{ $$=genExpression($1,$3,'/'); }
-		| '-' exp %prec NEG		{ $$=genExpression(NULL,$2,'-'); }
+exp:	VAR						{ $$=genVariable($1); exps.push_back($$); }
+		| NUM					{ $$=genNumber($1); exps.push_back($$);}
+		| exp '+' exp			{ $$=genExpression($1,$3,'+'); exps.push_back($$);}
+		| exp '-' exp			{ $$=genExpression($1,$3,'-'); exps.push_back($$);}
+		| exp '*' exp			{ $$=genExpression($1,$3,'*'); exps.push_back($$);}
+		| exp '/' exp			{ $$=genExpression($1,$3,'/'); exps.push_back($$);}
+		| '-' exp %prec NEG		{ $$=genExpression(NULL,$2,'-'); exps.push_back($$);}
 		| '(' exp ')'			{ $$ = $2; };
 
 /* End of grammar */

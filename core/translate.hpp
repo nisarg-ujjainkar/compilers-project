@@ -12,11 +12,12 @@ extern std::vector<std::string> whileStack;
 extern std::vector<std::string> ifStack;
 extern std::vector<std::string> ifElseStack;
 extern std::vector<std::string> condStack;
+extern std::vector<AST*> expDest;
 extern int whileCount;
 
 
 void linearise(std::vector<AST*>source,std::vector<AST*>&dest);
-
+void filterExp(std::vector<AST*>source,std::vector<AST*>&dest);
 std::string trExpression(AST*);
 void trAssignment(AST*);
 void trIf(AST*);
@@ -26,6 +27,6 @@ std::string trCond(AST*);
 void trCondJoin(AST*);
 std::string allocRegToVar(symrec*);
 std::string allocRegToNum(double val);
-void TranslatorMain(std::vector<AST*>head,std::vector<AST*>dest);
+void TranslatorMain(std::vector<AST*>,std::vector<AST*>);
 
 #endif

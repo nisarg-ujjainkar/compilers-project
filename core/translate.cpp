@@ -13,6 +13,44 @@ vector<string> whileStack;
 vector<string> ifStack;
 map<symrec*,int> location;
 int whileCount=0;
+void filterExp(vector<AST*>source,vector<AST*>&dest)  //this is also working
+{
+    vector<vector<AST*>::iterator> toRem;
+    for(auto a:source)
+    {
+        if(a->Kind==AST::A_Exp)
+        {
+            for(auto it=source.begin();*it!=a;++it)
+            {
+                if(*it==a->node.Expression.left)
+                {
+                    toRem.push_back(it);
+                    cout<<"found Left"<<endl;
+                }
+            }
+            for(auto it=source.begin();*it!=a;++it)
+            {
+                if(*it==a->node.Expression.right)
+                {
+                    toRem.push_back(it);
+                    cout<<"found right"<<endl;
+                }
+            }
+        }
+    }
+    auto it=toRem.begin();
+    for(auto it1=source.begin();it1!=source.end();++it1)
+    {
+        if(*it==source.end())
+            break;
+        if(*it==it1)
+            it++;
+        else
+        {
+            dest.push_back(*it1);
+        }
+    }
+}
 
 void linearise(std::vector<AST*>source,std::vector<AST*>&dest)  //this is working
 {
@@ -69,7 +107,7 @@ void linearise(std::vector<AST*>source,std::vector<AST*>&dest)  //this is workin
 
 string allocRegToVar(symrec *var)
 {
-    cout<<"Allocating Reg to var"<<endl;
+    cout<<"\tAllocating Reg to var"<<endl;
     int loc=location[var];
     string ins="\tMOV ";
     ins.append("r1, #");
@@ -85,7 +123,7 @@ string allocRegToVar(symrec *var)
 
 string allocRegToNum(double val)
 {
-    cout<<"allocating reg to num"<<endl;
+    cout<<"\tAllocating reg to num"<<endl;
     string ins="\tMOV r3, #";
     ins.append(to_string(val));
     instructions.push_back(ins);
@@ -95,78 +133,80 @@ string allocRegToNum(double val)
 string trExpression(AST *node)
 {
     cout<<"Translating Expression"<<endl;
-    if(node->Kind==AST::A_var)
+    if(node==NULL)
+        return "nr";
+    else if(node->Kind==AST::A_var)
     {
-        cout<<"\texpression goes to var"<<endl;
+        cout<<"\tExpression goes to var"<<endl;
         string reg=allocRegToVar(node->node.variable);
         return reg;
     }
     else if(node->Kind==AST::A_num)
     {
-        cout<<"\texpression goes to num"<<endl;
+        cout<<"\tExpression goes to num"<<endl;
         string reg=allocRegToNum(node->node.val);
         return reg;
     }
     else
     {
-        cout<<"This fucker is complex"<<endl;
+        cout<<"\tOperator is"<<node->node.Expression.Operator<<endl;
+        char op=node->node.Expression.Operator;
+        string ins;
         auto regLeft=trExpression(node->node.Expression.left);
         if(regLeft=="r0")
         {
-            string ins="\tADD r1,r0,#0";
+            ins="\tADD r1,r0,#0";
             instructions.push_back(ins);
             regLeft="r1";
+            ins.clear();
         }
         auto regRight=trExpression(node->node.Expression.right);
-        switch (node->node.Expression.Operator)
+        if(op=='+')
         {
-        case '+':
-        {
-            string ins="\tADD r0, ";
+            ins="\tADD r0, ";
             ins.append(regLeft);
-            ins.append(",");
+            ins.append(", ");
             ins.append(regRight);
             instructions.push_back(ins);
+            ins.clear();
         }
-        case '-':
+        else if(op=='*')
+        {
+            ins="\tMUL r0, ";
+            ins.append(regLeft);
+            ins.append(", ");
+            ins.append(regRight);
+            instructions.push_back(ins);
+            ins.clear();
+        }
+        else if(op=='/')
+        {
+            ins="\tSDIV r0, ";
+            ins.append(regLeft);
+            ins.append(", ");
+            ins.append(regRight);
+            instructions.push_back(ins);
+            ins.clear();
+        }
+        else if(op=='-')
         {
             if(regLeft=="nr")
             {
-                string ins="\tRSB r0, ";
+                ins="\tRSB r0, ";
                 ins.append(regRight);
-                ins.append(",#0");
+                ins.append(", #0");
                 instructions.push_back(ins);
+                ins.clear();
             }
             else
             {
-                string ins="\tSUB r0, ";
+                ins="\tSUB r0, ";
                 ins.append(regLeft);
-                ins.append(",");
+                ins.append(", ");
                 ins.append(regRight);
                 instructions.push_back(ins);
+                ins.clear();
             }
-        }
-        case '*':
-        {
-            string ins="\tMUL r0, ";
-            ins.append(regLeft);
-            ins.append(",");
-            ins.append(regRight);
-            instructions.push_back(ins);
-        }
-        case '/':
-        {
-            string ins="\tSDIV r0, ";
-            ins.append(regLeft);
-            ins.append(",");
-            ins.append(regRight);
-            instructions.push_back(ins);
-        }
-        default:
-        {
-            cout<<"Wrong Operator in the expression"<<endl;
-            exit(1);
-        }
         }
     }
     return "r0";
@@ -174,41 +214,43 @@ string trExpression(AST *node)
 
 string trCond(AST *cond)
 {
-    cout<<"translating cond"<<endl;
-    cout<<"\tcond ha type "<<cond->Kind<<endl;
-    cout<<"\tleft has kind "<<cond->node.cond.left->Kind<<endl;
-    cout<<"\tright has kind "<<cond->node.cond.right->Kind<<endl;
-    exit(1);
-    auto regLeft=trExpression(cond->node.cond.left);
+    cout<<"Translating Condition with op"<<cond->node.cond.op<<endl;
+    string op=cond->node.cond.op;
+    cout<<"opsize is "<<op.size()<<endl;
+    auto lhs=*(expDest.begin());
+    expDest.erase(expDest.begin());
+    auto regLeft=trExpression(lhs);
     if(regLeft=="r0")
     {
         string ins="\tADD r1,r0,#0";
         instructions.push_back(ins);
         regLeft="r1";
     }
-    auto regRight=trExpression(cond->node.cond.right);
+    auto rhs=*(expDest.begin());
+    expDest.erase(expDest.begin());
+    auto regRight=trExpression(rhs);
     string ins="\tCMP ";
     ins.append(regLeft);
     ins.append(",");
     ins.append(regRight);
     instructions.push_back(ins);
     string ret;
-    if(strcmp(cond->node.cond.op,">=")==0)
+    if(op==">=")
         // condStack.push_back("bge ");
         ret="\tBGE ";
-    else if(strcmp(cond->node.cond.op,"<=")==0)
+    else if(op=="<=")
         // condStack.push_back("ble ");
         ret="\tBLE ";
-    else if(strcmp(cond->node.cond.op,"==")==0)
+    else if(op=="==")
         // condStack.push_back("beq ");
         ret="\tBEQ ";
-    else if(strcmp(cond->node.cond.op,"!=")==0)
+    else if(op=="!=")
         // condStack.push_back("bne ");
         ret="\tBNE ";
-    else if(strcmp(cond->node.cond.op,">")==0)
+    else if(op==">")
         // condStack.push_back("bgt ");
         ret="\tBGT ";
-    else if(strcmp(cond->node.cond.op,"<")==0)
+    else if(op=="<")
         // condStack.push_back("blt ");
         ret="\tBLT ";
     else
@@ -221,7 +263,7 @@ string trCond(AST *cond)
 
 void trWhile(AST *While, AST *next)
 {
-    cout<<"translating while"<<endl;
+    cout<<"Translating While"<<endl;
     ++whileCount;
     string tmp="while";
     tmp.append(to_string(whileCount));
@@ -252,10 +294,8 @@ void trWhile(AST *While, AST *next)
 }
 
 void trAssignment(AST *assn)
-{
-    cout<<"translating assignment"<<assn->Kind<<endl;
-    cout<<"\trhs has type "<<assn->node.Assignment.rhs->Kind<<endl;
-    // exit(1);
+{   
+    cout<<"Translating Assn"<<endl;
     int loc;
     string destReg;
     if(location.find(assn->node.Assignment.variable)->second==0)
@@ -272,7 +312,11 @@ void trAssignment(AST *assn)
     {
         loc=location.find(assn->node.Assignment.variable)->second;
     }
-    auto regRight=trExpression(assn->node.Assignment.rhs);
+    auto rhs=*(expDest.begin());
+    cout<<"\tRhs is ot type"<<rhs->Kind<<endl;
+    auto regRight=trExpression(rhs);
+    cout<<"Rigister allocated "<<regRight<<endl;
+    expDest.erase(expDest.begin());
     if(regRight=="r3")
         destReg="r1";
     else
@@ -292,6 +336,9 @@ void trAssignment(AST *assn)
     ins.append(destReg);
     ins.append("]");
     instructions.push_back(ins);
+    cout<<"Current code is"<<endl;
+    for(auto a:instructions)
+        cout<<a<<endl;
 }
 
 void trIf(AST *If)
@@ -304,53 +351,36 @@ void trIfElse(AST *IfElse)
     return;
 }
 
-void TranslatorMain(vector<AST*>head,vector<AST*>dest)
+void TranslatorMain(vector<AST*>source,vector<AST*>ref)
 {
-    if(dest.size()==0)
+    for (auto a:source)
+        cout<<a->Kind;
+    cout<<endl;
+    auto it1=source.begin();
+    auto it2=ref.begin();
+    while(it1!=source.end() and it2!=ref.end())
     {
-        return;
-    }
-    auto it1=*(head.begin());
-    auto it2=*(dest.begin());
-    cout<<it2->Kind<<endl;
-    
-    if(it2->Kind==AST::A_WhileStm)
-    {
-        cout<<"before deref"<<endl;
-        cout<<"\tCond has type "<<it2->node.While.cond->Kind<<endl;
-    }
-    head.erase(head.begin());
-    dest.erase(dest.begin());
-    
-    if(it2->Kind==AST::A_WhileStm)
-    {
-        cout<<"after deref"<<endl;
-        cout<<"\tCond has type "<<it2->node.While.cond->Kind<<endl;
-        exit(1);
-    }
-    switch (it2->Kind)
-    {
-    case AST::A_Assn:
-        trAssignment(it2);
-    case AST::A_WhileStm:
-        trWhile(it2,it1);
-    case AST::A_IfStm:
-        break;
-    case AST::A_IfElse:
-        break;
-    default:
-        break;
-    }
-    if(it1->Kind==AST::A_WhileStm)
-    {
-        auto tmp1=*(whileStack.rbegin());
-        whileStack.pop_back();
-        auto tmp2=*(whileStack.rbegin());
-        whileStack.pop_back();
-        string ins="\t b ";
-        ins.append(tmp2);
-        instructions.push_back(ins);
-        ins.clear();
-        instructions.push_back(tmp1);
+        if((*it1)->Kind==AST::A_Assn)
+            trAssignment(*it1);
+        else if((*it1)->Kind==AST::A_WhileStm)
+            trWhile(*it1,*it2);
+        else
+        {
+            cout<<"wrong case"<<endl;
+            exit(1);
+        }
+        if((*it2)->Kind==AST::A_WhileStm)
+        {
+            auto tmp1=*(whileStack.rbegin());
+            whileStack.pop_back();
+            auto tmp2=*(whileStack.rbegin());
+            whileStack.pop_back();
+            string ins="\tB ";
+            ins.append(tmp2);
+            instructions.push_back(ins);
+            instructions.push_back(tmp1);
+        }
+        it1++;
+        it2++;
     }
 }
