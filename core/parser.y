@@ -101,12 +101,6 @@ relop:	GEQ		{$$=$1;}
 		| LT	{$$=$1;}
 		| GT	{$$=$1;};
 
-/* cond:	exp "<=" exp			{$$=genCond($1,$3,$2);}
-		| exp '>' '=' exp		{$$=genCond($1,$4,">=");}
-		| exp '<' exp			{$$=genCond($1,$3,"<");}
-		| exp '>' exp			{$$=genCond($1,$3,">");}
-		| exp '=' '=' exp		{$$=genCond($1,$4,"==");}
-		| exp '!' '=' exp		{$$=genCond($1,$4,"!=");}; */
 
 exp:	VAR						{ $$=genVariable($1); exps.push_back($$); }
 		| NUM					{ $$=genNumber($1); exps.push_back($$);}

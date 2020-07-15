@@ -90,6 +90,15 @@ int main()
         file<<str<<endl;
     }
     file<<"\tEND"<<endl;
+    cout<<"======================Translatied====================="<<endl;
+    cout<<"Static register map"<<endl;
+    for(auto it=varReg.begin();it!=varReg.end();++it)
+    {
+        if(it->second!=NULL)
+            cout<<"Variable: "<<it->second->name<<" Register: "<<it->first<<endl;
+        else
+            cout<<"empty register: "<<it->first<<endl;
+    }
     instructions.clear();
     location.clear();
     for(auto a:head)

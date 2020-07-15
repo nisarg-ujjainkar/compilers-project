@@ -47,7 +47,7 @@ void filterExp(vector<AST*>source,vector<AST*>&dest)  //this is also working
                 if(*it==a->node.Expression.left)
                 {
                     toRem.push_back(it);
-                    cout<<"found Left"<<endl;
+                    // cout<<"found Left"<<endl;
                 }
             }
             for(auto it=source.begin();*it!=a;++it)
@@ -55,7 +55,7 @@ void filterExp(vector<AST*>source,vector<AST*>&dest)  //this is also working
                 if(*it==a->node.Expression.right)
                 {
                     toRem.push_back(it);
-                    cout<<"found right"<<endl;
+                    // cout<<"found right"<<endl;
                 }
             }
         }
@@ -89,8 +89,6 @@ void linearise(std::vector<AST*>source,std::vector<AST*>&dest)  //this is workin
                 if(a->Kind==AST::A_WhileStm)
                 {
                     auto tmp=a->node.While.code;
-                    // cout<<"While block"<<endl;
-                    // cout<<tmp->Kind<<endl;
                     if(a->node.While.code==*it)
                     {
                         foundBlock=true;
@@ -215,17 +213,6 @@ string allocRegToVar(symrec *var,bool isAssn=false)
         instructions.push_back(ins);
     }
     return reg;
-    // int loc=location[var];
-    // string ins="\tMOV ";
-    // ins.append("r1, #");
-    // stringstream stream;
-    // stream<<"0x"<<hex<<loc;
-    // ins.append(stream.str());
-    // instructions.push_back(ins);
-    // ins.clear();
-    // ins="\tLDR r2, [r1]";
-    // instructions.push_back(ins);
-    // return "r2";
 }
 
 string allocRegToNum(double val)
@@ -270,7 +257,7 @@ string trExpression(AST *node)
     }
     else
     {
-        cout<<"\tOperator is"<<node->node.Expression.Operator<<endl;
+        cout<<"\tComplex Expression"<<endl;
         char op=node->node.Expression.Operator;
         string ins;
         auto regLeft=trExpression(node->node.Expression.left);
@@ -346,7 +333,7 @@ string trCond(AST *cond)
 {
     cout<<"Translating Condition with op"<<cond->node.cond.op<<endl;
     string op=cond->node.cond.op;
-    cout<<"opsize is "<<op.size()<<endl;
+    // cout<<"opsize is "<<op.size()<<endl;
     auto lhs=*(expDest.begin());
     expDest.erase(expDest.begin());
     auto regLeft=trExpression(lhs);
@@ -393,7 +380,7 @@ string trCond(AST *cond)
 
 void trWhile(AST *While)
 {
-    cout<<"Translating While"<<endl;
+    // cout<<"Translating While"<<endl;
     ++whileCount;
     string tmp="while";
     tmp.append(to_string(whileCount));
@@ -428,9 +415,9 @@ void trAssignment(AST *assn)
         loc=location.find(assn->node.Assignment.variable)->second;
     }
     auto rhs=*(expDest.begin());
-    cout<<"\tRhs is ot type"<<rhs->Kind<<endl;
+    // cout<<"\tRhs is ot type"<<rhs->Kind<<endl;
     auto regRight=trExpression(rhs);
-    cout<<"Rigister allocated "<<regRight<<endl;
+    // cout<<"Rigister allocated "<<regRight<<endl;
     expDest.erase(expDest.begin());
     string regLeft=allocRegToVar(assn->node.Assignment.variable,true);
     regStatus[regLeft]=true;
@@ -477,7 +464,7 @@ void TranslatorMain(vector<AST*>::iterator &it1,vector<AST*>::iterator &it2)
         cout<<"wrong case"<<endl;
         exit(1);
     }
-    if(*it1==*it2)
+    if(*it1==*it2 and ((*it1)->Kind==AST::A_WhileStm or (*it1)->Kind==AST::A_IfStm))
     {
         advance(it1,1);
         advance(it2,1);

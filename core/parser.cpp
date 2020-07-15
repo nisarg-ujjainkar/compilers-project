@@ -543,8 +543,8 @@ static const yytype_int8 yyrline[] =
 {
        0,    68,    68,    69,    71,    73,    74,    75,    76,    78,
       80,    81,    83,    84,    85,    86,    88,    89,    91,    92,
-      94,    95,    97,    98,    99,   100,   101,   102,   111,   112,
-     113,   114,   115,   116,   117,   118
+      94,    95,    97,    98,    99,   100,   101,   102,   105,   106,
+     107,   108,   109,   110,   111,   112
 };
 #endif
 
@@ -1530,49 +1530,49 @@ yyreduce:
     break;
 
   case 28:
-#line 111 "parser.y"
+#line 105 "parser.y"
                                                         { (yyval.ast)=genVariable((yyvsp[0].tptr)); exps.push_back((yyval.ast)); }
 #line 1536 "parser.cpp"
     break;
 
   case 29:
-#line 112 "parser.y"
+#line 106 "parser.y"
                                                         { (yyval.ast)=genNumber((yyvsp[0].val)); exps.push_back((yyval.ast));}
 #line 1542 "parser.cpp"
     break;
 
   case 30:
-#line 113 "parser.y"
+#line 107 "parser.y"
                                                 { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'+'); exps.push_back((yyval.ast));}
 #line 1548 "parser.cpp"
     break;
 
   case 31:
-#line 114 "parser.y"
+#line 108 "parser.y"
                                                 { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'-'); exps.push_back((yyval.ast));}
 #line 1554 "parser.cpp"
     break;
 
   case 32:
-#line 115 "parser.y"
+#line 109 "parser.y"
                                                 { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'*'); exps.push_back((yyval.ast));}
 #line 1560 "parser.cpp"
     break;
 
   case 33:
-#line 116 "parser.y"
+#line 110 "parser.y"
                                                 { (yyval.ast)=genExpression((yyvsp[-2].ast),(yyvsp[0].ast),'/'); exps.push_back((yyval.ast));}
 #line 1566 "parser.cpp"
     break;
 
   case 34:
-#line 117 "parser.y"
+#line 111 "parser.y"
                                                 { (yyval.ast)=genExpression(NULL,(yyvsp[0].ast),'-'); exps.push_back((yyval.ast));}
 #line 1572 "parser.cpp"
     break;
 
   case 35:
-#line 118 "parser.y"
+#line 112 "parser.y"
                                                 { (yyval.ast) = (yyvsp[-1].ast); }
 #line 1578 "parser.cpp"
     break;
@@ -1810,7 +1810,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 121 "parser.y"
+#line 115 "parser.y"
 
 
 
