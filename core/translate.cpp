@@ -390,7 +390,7 @@ string trCond(AST *cond)
     return ret;
 }
 
-void trWhile(AST *While, AST *next)
+void trWhile(AST *While)
 {
     cout<<"Translating While"<<endl;
     ++whileCount;
@@ -406,20 +406,6 @@ void trWhile(AST *While, AST *next)
     ins.append(tmp);
     instructions.push_back(ins);
     whileStack.push_back(tmp);
-    if(While->node.While.code!=next)
-    {
-        if(While->node.While.code->Kind==AST::A_Assn)
-            trAssignment(While->node.While.code);
-        else if(While->node.While.code->Kind==AST::A_IfStm)
-            trIf(While->node.While.code,next);
-        else if(While->node.While.code->Kind==AST::A_IfElse)
-            trIfElse(While->node.While.code);
-        else
-        {
-            cout<<"There is some problem here. Exiting"<<endl;
-            exit(1);
-        }
-    }
 }
 
 void trAssignment(AST *assn)
@@ -456,36 +442,20 @@ void trAssignment(AST *assn)
     ins.clear();
 }
 
-void trIf(AST *If,AST *next)
+void trIf(AST *If)
 {
     cout<<"Translating If"<<endl;
     ++ifCount;
     string tmp="if";
     tmp.append(to_string(ifCount));
     instructions.push_back(tmp);
-    ifStack.push_back(tmp);
     tmp.clear();
     string ins=trCond(If->node.If.cond);
-    tmp="end_while";
-    // ins.append("end_while");
+    tmp="end_if";
     tmp.append(to_string(ifCount));
     ins.append(tmp);
     instructions.push_back(ins);
     ifStack.push_back(tmp);
-    if(If->node.If.code!=next)
-    {
-        if(If->node.If.code->Kind==AST::A_Assn)
-            trAssignment(If->node.If.code);
-        else if(If->node.If.code->Kind==AST::A_IfStm and If!=next)
-            trIf(If->node.If.code,next);
-        else if(If->node.If.code->Kind==AST::A_IfElse)
-            trIfElse(If->node.If.code);
-        else
-        {
-            cout<<"There is some problem here. Exiting"<<endl;
-            exit(1);
-        }
-    }
 }
 
 void trIfElse(AST *IfElse)
@@ -493,37 +463,54 @@ void trIfElse(AST *IfElse)
     return;
 }
 
-void TranslatorMain(vector<AST*>source,vector<AST*>ref)
+void TranslatorMain(vector<AST*>::iterator &it1,vector<AST*>::iterator &it2)
 {
-    init();
-    for (auto a:source)
-        cout<<a->Kind;
-    cout<<endl;
-    auto it1=source.begin();
-    auto it2=ref.begin();
-    while(it1!=source.end() and it2!=ref.end())
+    if((*it1)->Kind==AST::A_Assn)
+        trAssignment(*it1);
+    else if((*it1)->Kind==AST::A_WhileStm)
+        trWhile(*it1);
+    else if((*it1)->Kind==AST::A_IfStm)
+        trIf(*it1);
+    else
     {
-        if((*it1)->Kind==AST::A_Assn)
-            trAssignment(*it1);
-        else if((*it1)->Kind==AST::A_WhileStm)
-            trWhile(*it1,*it2);
-        else
+        cout<<"wrong case"<<endl;
+        exit(1);
+    }
+    if((*it2)->Kind==AST::A_WhileStm)
+    {
+        bool codeIsLine=false;
+        if((*it1)==(*it2))
         {
-            cout<<"wrong case"<<endl;
-            exit(1);
+            codeIsLine=true;
+            it1++;
+            // it2++;
+            TranslatorMain(it1,it2);
         }
-        if((*it2)->Kind==AST::A_WhileStm)
+        if(codeIsLine==true)
+            it2++;
+        auto tmp1=*(whileStack.rbegin());
+        whileStack.pop_back();
+        auto tmp2=*(whileStack.rbegin());
+        whileStack.pop_back();
+        string ins="\tB ";
+        ins.append(tmp2);
+        instructions.push_back(ins);
+        instructions.push_back(tmp1);
+    }
+    if((*it2)->Kind==AST::A_IfStm)
+    {
+        bool codeIsLine=false;
+        if((*it1)==(*it2))
         {
-            auto tmp1=*(whileStack.rbegin());
-            whileStack.pop_back();
-            auto tmp2=*(whileStack.rbegin());
-            whileStack.pop_back();
-            string ins="\tB ";
-            ins.append(tmp2);
-            instructions.push_back(ins);
-            instructions.push_back(tmp1);
+            codeIsLine=true;
+            it1++;
+            // it2++;
+            TranslatorMain(it1,it2);
         }
-        it1++;
-        it2++;
+        if(codeIsLine==true)
+            it2++;
+        auto tmp1=(*ifStack.rbegin());
+        ifStack.pop_back();
+        instructions.push_back(tmp1);
     }
 }

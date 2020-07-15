@@ -25,7 +25,6 @@ int main()
         cout<<a->Kind;
     }
     cout<<endl;
-    exit(1);
     cout<<"parsing exps"<<endl;
     for(auto b:exps)
     {
@@ -34,7 +33,15 @@ int main()
     cout<<endl;
     filterExp(exps,expDest);
     cout<<"======================Translation====================="<<endl;
-    TranslatorMain(dest,head);
+    init();
+    auto it1=dest.begin();
+    auto it2=head.begin();
+    while(it1!=dest.end() and it2!=head.end())
+    {
+        TranslatorMain(it1,it2);
+        ++it1;
+        ++it2;
+    }
     fstream file;
     file.open("out.s",ios::trunc| ios::out);
     for(auto str:instructions)

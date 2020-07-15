@@ -16,13 +16,15 @@ extern std::vector<string> AccessPattern;
 
 extern int whileCount;
 extern int ifCount;
+extern int IfElseCount;
+extern int ElseCount;
 
 
 void linearise(std::vector<AST*>source,std::vector<AST*>&dest);
 void filterExp(std::vector<AST*>source,std::vector<AST*>&dest);
 std::string trExpression(AST*);
 void trAssignment(AST*);
-void trIf(AST*,AST*);
+void trIf(AST*);
 void trIfElse(AST*);
 void trWhile(AST*,AST*);
 std::string trCond(AST*);
@@ -30,6 +32,7 @@ void trCondJoin(AST*);
 std::string allocRegToVar(symrec*,bool);
 std::string allocRegToNum(double val);
 std::string freeRegister();
-void TranslatorMain(std::vector<AST*>,std::vector<AST*>);
+void TranslatorMain(std::vector<AST*>::iterator&it1,std::vector<AST*>::iterator&it2);
+void init(void);
 
 #endif
