@@ -363,8 +363,8 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[41] =
     {   0,
-        0,    0,   19,   17,   15,   16,   17,   17,   13,    8,
-       17,    7,   14,   14,   14,   14,   14,   17,   10,   11,
+        0,    0,   19,   17,   15,   16,   17,   17,   13,    7,
+       17,    8,   14,   14,   14,   14,   14,   17,   10,   11,
        13,   13,    5,    9,    6,   14,   14,   14,   14,    2,
        14,   12,   13,   14,    3,   14,    4,   14,    1,    0
     } ;
@@ -471,12 +471,14 @@ char *yytext;
 	#include "ast.hpp"
 	#include "parser.hpp"
 	#include "table.hpp"
+    #include<string.h>
 	#include <stdlib.h>
+    #include<string>
     #define YY_DECL extern "C" int yylex()
 	symrec *sym_table = (symrec *)0;
 	int lineNum=0;
-#line 479 "lexer.cpp"
-#line 480 "lexer.cpp"
+#line 481 "lexer.cpp"
+#line 482 "lexer.cpp"
 
 #define INITIAL 0
 
@@ -693,9 +695,9 @@ YY_DECL
 		}
 
 	{
-#line 13 "lexer.l"
+#line 15 "lexer.l"
 
-#line 699 "lexer.cpp"
+#line 701 "lexer.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -754,96 +756,96 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 14 "lexer.l"
+#line 16 "lexer.l"
 {return WHILE;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 15 "lexer.l"
+#line 17 "lexer.l"
 {return IF;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 16 "lexer.l"
-return FOR;
+#line 18 "lexer.l"
+{return FOR;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 17 "lexer.l"
-return ELSE;
+#line 19 "lexer.l"
+{return ELSE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 18 "lexer.l"
-return LEQ;
+#line 20 "lexer.l"
+{yylval.op=strdup(yytext);return LEQ;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 19 "lexer.l"
-return GEQ;
+#line 21 "lexer.l"
+{yylval.op=strdup(yytext);return GEQ;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 20 "lexer.l"
-return GT;
+#line 22 "lexer.l"
+{yylval.op=strdup(yytext);return LT;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 21 "lexer.l"
-return LT;
+#line 23 "lexer.l"
+{yylval.op=strdup(yytext);return GT;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 22 "lexer.l"
-return EQ;
+#line 24 "lexer.l"
+{yylval.op=strdup(yytext);return EQ;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 23 "lexer.l"
-return NEQ;
+#line 25 "lexer.l"
+{yylval.op=strdup(yytext);return NEQ;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 24 "lexer.l"
-return AND;
+#line 26 "lexer.l"
+{yylval.op=strdup(yytext);return AND;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 25 "lexer.l"
-return OR;
+#line 27 "lexer.l"
+{yylval.op=strdup(yytext);return OR;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 26 "lexer.l"
+#line 28 "lexer.l"
 {sscanf(yytext,"%lf",&yylval.val);return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 27 "lexer.l"
+#line 29 "lexer.l"
 {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 28 "lexer.l"
+#line 30 "lexer.l"
 {/* Remove White Space */}
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 29 "lexer.l"
+#line 31 "lexer.l"
 {lineNum++;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 30 "lexer.l"
+#line 32 "lexer.l"
 {return yytext[0];}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 31 "lexer.l"
+#line 33 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 847 "lexer.cpp"
+#line 849 "lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1848,7 +1850,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 31 "lexer.l"
+#line 33 "lexer.l"
 
 
 /* The symbol table: a chain of `struct symrec'.  */

@@ -2,7 +2,9 @@
 	#include "ast.hpp"
 	#include "parser.hpp"
 	#include "table.hpp"
+    #include<string.h>
 	#include <stdlib.h>
+    #include<string>
     #define YY_DECL extern "C" int yylex()
 	symrec *sym_table = (symrec *)0;
 	int lineNum=0;
@@ -13,16 +15,16 @@ id [a-zA-Z]+[a-zA-Z0-9_]*
 %%
 "while" {return WHILE;}
 "if"    {return IF;}
-"for"   return FOR;
-"else"  return ELSE;
-"<="    return LEQ;
-">="    return GEQ;
-">"     return GT;
-"<"     return LT;
-"=="    return EQ;
-"!="    return NEQ;
-"&&"    return AND;
-"||"    return OR;
+"for"   {return FOR;}
+"else"  {return ELSE;}
+"<="    {yylval.op=strdup(yytext);return LEQ;}
+">="    {yylval.op=strdup(yytext);return GEQ;}
+"<"     {yylval.op=strdup(yytext);return LT;}
+">"     {yylval.op=strdup(yytext);return GT;}
+"=="    {yylval.op=strdup(yytext);return EQ;}
+"!="    {yylval.op=strdup(yytext);return NEQ;}
+"&&"    {yylval.op=strdup(yytext);return AND;}
+"||"    {yylval.op=strdup(yytext);return OR;}
 {floatpt} {sscanf(yytext,"%lf",&yylval.val);return NUM;}
 {id} {symrec *s;s=getsym(yytext); if(s==0) s=putsym(yytext,VAR);yylval.tptr=s;return VAR;}
 [ \t] {/* Remove White Space */}

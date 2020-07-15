@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include <iostream>
 
-
+using namespace std;
 
 AST* genVariable(symrec *var)
 {
@@ -53,6 +53,8 @@ AST* genWhile(AST *cond, AST *code)
 {
     printf("generating While\n");
     // AST *node=(AST*)malloc(sizeof(AST));
+    cout<<"\tcond has type "<<cond->Kind<<endl;
+    cout<<"\tcode has type "<<code->Kind<<endl;
     AST *node = new AST;
     node->Kind=AST::A_WhileStm;
     node->node.While.code=code;
@@ -97,7 +99,10 @@ AST* genCondJoin(AST *left, AST *right, char *op)
 
 AST* genCond(AST *left, AST *right, char *op)
 {
-    printf("generating Cond\n");
+    printf("generating Cond with operator ");
+    cout<<op<<endl;
+    cout<<"\tleft has type "<<left->Kind<<endl;
+    cout<<"\tright has type "<<right->Kind<<endl;
     // AST *node=(AST*)malloc(sizeof(AST));
     AST *node = new AST;
     node->Kind=AST::A_cond;
