@@ -25,6 +25,8 @@ The output will appear in `out.s`.
 
 ## About The Project
 
-This is out compilers project that we did as a part of the *CS 327 Compilers* course at IIT Gandhinagar, under the guidance if instructor *prof. [Bireswar Das](https://iitgn.ac.in/faculty/cse/bireswar)*. Our compilers supports a syntax similar to the syntax of `C` and can compile `while` loops and `if` statement. It can also compile nested `while` and `if`, `while inside if` and `if inside while`. 
+This is out compilers project that we did as a part of the *CS 327 Compilers* course at IIT Gandhinagar, under the guidance if instructor *prof. [Bireswar Das](https://iitgn.ac.in/faculty/cse/bireswar)*. 
+
+Our compilers supports a syntax similar to the syntax of `C` and can compile `while` loops and `if` statement. It can also compile nested `while` and `if`, `while inside if` and `if inside while`. Our compiler supports numeric variables, and conditional statement with a comparison operator (same as C operators). 
 
 Our compiler compiles the source code for 32bit ARM targets. We simulate ARM assembly code using *[keil uVision](http://www.keil.com/)*, which is available for free.
