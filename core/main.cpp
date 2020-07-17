@@ -83,7 +83,7 @@ int main()
     }
     fstream file;
     file.open("out.s",ios::trunc| ios::out);
-    file<<"AREA ASDF, CODE, READONLY"<<endl;
+    file<<" AREA ASDF, CODE, READONLY"<<endl;
     file<<"\tENTRY"<<endl;
     for(auto str:instructions)
     {

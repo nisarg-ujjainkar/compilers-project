@@ -233,7 +233,7 @@ string allocRegToNum(double val)
             regStatus["r2"]=true;
         }
     // string ins="\tMOV r3, #";
-    ins.append(to_string(val));
+    ins.append(to_string((int)val));
     instructions.push_back(ins);
     return reg;
 }
@@ -354,10 +354,10 @@ string trCond(AST *cond)
     string ret;
     if(op==">=")
         // condStack.push_back("bge ");
-        ret="\tBGE ";
+        ret="\tBLT ";
     else if(op=="<=")
         // condStack.push_back("ble ");
-        ret="\tBLE ";
+        ret="\tBGT ";
     else if(op=="==")
         // condStack.push_back("beq ");
         ret="\tBEQ ";
@@ -366,10 +366,10 @@ string trCond(AST *cond)
         ret="\tBNE ";
     else if(op==">")
         // condStack.push_back("bgt ");
-        ret="\tBGT ";
+        ret="\tBLE ";
     else if(op=="<")
         // condStack.push_back("blt ");
-        ret="\tBLT ";
+        ret="\tBGE ";
     else
     {
         cout<<"Wrong operator in cond"<<endl;
