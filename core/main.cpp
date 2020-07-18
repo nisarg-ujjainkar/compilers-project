@@ -20,11 +20,13 @@ int main()
     cout<<'\n';
     vector<AST*> dest;
     linearise(head,dest);
+    cout<<dest.size()<<endl;
     for (auto a:dest)
     {
         cout<<a->Kind;
     }
     cout<<endl;
+    // exit(0);
     cout<<"parsing exps"<<endl;
     for(auto b:exps)
     {

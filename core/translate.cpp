@@ -45,18 +45,9 @@ void filterExp(vector<AST*>source,vector<AST*>&dest)  //this is also working
             for(auto it=source.begin();*it!=a;++it)
             {
                 if(*it==a->node.Expression.left)
-                {
                     toRem.push_back(it);
-                    // cout<<"found Left"<<endl;
-                }
-            }
-            for(auto it=source.begin();*it!=a;++it)
-            {
                 if(*it==a->node.Expression.right)
-                {
                     toRem.push_back(it);
-                    // cout<<"found right"<<endl;
-                }
             }
         }
     }
@@ -68,9 +59,7 @@ void filterExp(vector<AST*>source,vector<AST*>&dest)  //this is also working
         if(*it==it1)
             it++;
         else
-        {
             dest.push_back(*it1);
-        }
     }
 }
 
@@ -128,6 +117,12 @@ void linearise(std::vector<AST*>source,std::vector<AST*>&dest)  //this is workin
 string freeRegister()
 {
     auto it=AccessPattern.begin();
+    while(it!=AccessPattern.end())
+    {
+        if(regStatus[*it]==false)
+            break;
+        ++it;
+    }
     auto reg=*it;
     auto var=varReg[reg];
     auto loc=location[var];
@@ -221,17 +216,17 @@ string allocRegToNum(double val)
     string ins;
     string reg;
     if(regStatus["r2"]==true)
-        {
-            ins="\tMOV r3, #";
-            reg="r3";
-            regStatus["r3"]=true;
-        }
+    {
+        ins="\tMOV r3, #";
+        reg="r3";
+        regStatus["r3"]=true;
+    }
     else
-        {
-            ins="\tMOV r2, #";
-            reg="r2";
-            regStatus["r2"]=true;
-        }
+    {
+        ins="\tMOV r2, #";
+        reg="r2";
+        regStatus["r2"]=true;
+    }
     // string ins="\tMOV r3, #";
     ins.append(to_string((int)val));
     instructions.push_back(ins);
@@ -360,10 +355,10 @@ string trCond(AST *cond)
         ret="\tBGT ";
     else if(op=="==")
         // condStack.push_back("beq ");
-        ret="\tBEQ ";
+        ret="\tBNE ";
     else if(op=="!=")
         // condStack.push_back("bne ");
-        ret="\tBNE ";
+        ret="\tBEQ ";
     else if(op==">")
         // condStack.push_back("bgt ");
         ret="\tBLE ";
@@ -470,21 +465,4 @@ void TranslatorMain(vector<AST*>::iterator &it1,vector<AST*>::iterator &it2)
         advance(it2,1);
         TranslatorMain(it1,it2);
     }
-    // if((*it2)->Kind==AST::A_WhileStm)
-    // {
-    //     auto tmp1=*(whileStack.rbegin());
-    //     whileStack.pop_back();
-    //     auto tmp2=*(whileStack.rbegin());
-    //     whileStack.pop_back();
-    //     string ins="\tB ";
-    //     ins.append(tmp2);
-    //     instructions.push_back(ins);
-    //     instructions.push_back(tmp1);
-    // }
-    // if((*it2)->Kind==AST::A_IfStm)
-    // {
-    //     auto tmp1=(*ifStack.rbegin());
-    //     ifStack.pop_back();
-    //     instructions.push_back(tmp1);
-    // }
 }
