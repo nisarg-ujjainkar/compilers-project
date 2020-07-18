@@ -122,11 +122,22 @@ int main()
         else
             cout<<"empty register: "<<it->first<<endl;
     }
+    cout<<"======================End====================="<<endl;
+    cout<<"Clearing memory"<<endl;
     instructions.clear();
+    for(auto it=location.begin();it!=location.end();++it)
+    {
+        delete it->first;
+    }
     location.clear();
+    varReg.clear();
+    AccessPattern.clear();
+    regStatus.clear();
     for(auto a:head)
     {
         delete a;
     }
+    for(auto a:exps)
+        delete a;
     return 0;
 }
