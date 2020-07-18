@@ -13,10 +13,11 @@ extern std::vector<std::string> ifStack;
 extern std::vector<std::string> ifElseStack;
 extern std::vector<AST*> expDest;
 extern std::vector<string> AccessPattern;
+extern std::vector<AST*> elseStack; 
 
 extern int whileCount;
 extern int ifCount;
-extern int IfElseCount;
+extern int ifElseCount;
 extern int ElseCount;
 
 

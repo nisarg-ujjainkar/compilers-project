@@ -13,13 +13,15 @@ using namespace std;
 vector<string> instructions;
 vector<string> whileStack;
 vector<string> ifStack;
+vector<string> ifElseStack;
+vector<AST*> elseStack; 
 vector<string> AccessPattern;
 map<symrec*,int> location;
 map<string,bool> regStatus;
 map<string,symrec*> varReg;
 int whileCount=0;
 int ifCount=0;
-
+int ifElseCount=0;
 
 void init()
 {
@@ -161,6 +163,7 @@ string allocRegToVar(symrec *var,bool isAssn=false)
             auto temp=find(AccessPattern.begin(),AccessPattern.end(),reg);
             AccessPattern.erase(temp);
             AccessPattern.push_back(reg);
+            cout<<"Allocated register to var"<<endl;
             return reg;
         }
     }
@@ -186,6 +189,7 @@ string allocRegToVar(symrec *var,bool isAssn=false)
                 ins.append(", [r1]");
                 instructions.push_back(ins);
             }
+            cout<<"Allocated register to var"<<endl;
             return reg;
         }
     }
@@ -207,6 +211,7 @@ string allocRegToVar(symrec *var,bool isAssn=false)
         ins.append(", [r1]");
         instructions.push_back(ins);
     }
+    cout<<"Allocated register to var"<<endl;
     return reg;
 }
 
@@ -230,6 +235,7 @@ string allocRegToNum(double val)
     // string ins="\tMOV r3, #";
     ins.append(to_string((int)val));
     instructions.push_back(ins);
+    cout<<"Allocated register to number"<<endl;
     return reg;
 }
 
@@ -242,12 +248,14 @@ string trExpression(AST *node)
     {
         cout<<"\tExpression goes to var"<<endl;
         string reg=allocRegToVar(node->node.variable,false);
+        cout<<"Transated Expr"<<endl;
         return reg;
     }
     else if(node->Kind==AST::A_num)
     {
         cout<<"\tExpression goes to num"<<endl;
         string reg=allocRegToNum(node->node.val);
+        cout<<"Transated Expr"<<endl;
         return reg;
     }
     else
@@ -321,6 +329,7 @@ string trExpression(AST *node)
         regStatus["r2"]=false;
         regStatus["r3"]=false;
     }
+    cout<<"Transated Expr"<<endl;
     return "r0";
 }
 
@@ -370,12 +379,13 @@ string trCond(AST *cond)
         cout<<"Wrong operator in cond"<<endl;
         exit(1);
     }
+    cout<<"Translated cond"<<endl;
     return ret;
 }
 
 void trWhile(AST *While)
 {
-    // cout<<"Translating While"<<endl;
+    cout<<"Translating While"<<endl;
     ++whileCount;
     string tmp="while";
     tmp.append(to_string(whileCount));
@@ -389,6 +399,7 @@ void trWhile(AST *While)
     ins.append(tmp);
     instructions.push_back(ins);
     whileStack.push_back(tmp);
+    cout<<"translated while"<<endl;
 }
 
 void trAssignment(AST *assn)
@@ -423,6 +434,7 @@ void trAssignment(AST *assn)
     ins.append(", #0");
     instructions.push_back(ins);
     ins.clear();
+    cout<<"Translated Assn"<<endl;
 }
 
 void trIf(AST *If)
@@ -439,21 +451,48 @@ void trIf(AST *If)
     ins.append(tmp);
     instructions.push_back(ins);
     ifStack.push_back(tmp);
+    tmp.clear();
+    cout<<"Translated If"<<endl;
 }
 
 void trIfElse(AST *IfElse)
 {
-    return;
+    cout<<"Translating IfElse"<<endl;
+    ++ifElseCount;
+    string tmp="ifElse";
+    tmp.append(to_string(ifElseCount));
+    instructions.push_back(tmp);
+    tmp.clear();
+    string ins=trCond(IfElse->node.IfElse.cond);
+    tmp="end_ifElse";
+    tmp.append(to_string(ifElseCount));
+    ifElseStack.push_back(tmp);
+    tmp.clear();
+    tmp="else";
+    tmp.append(to_string(ifElseCount));
+    ins.append(tmp);
+    instructions.push_back(ins);
+    ifElseStack.push_back(tmp);
+    tmp.clear();
+    cout<<"Translated IfElse"<<endl;
 }
 
 void TranslatorMain(vector<AST*>::iterator &it1,vector<AST*>::iterator &it2)
 {
+    auto temp=it2;
+    auto temp1=it1;
     if((*it1)->Kind==AST::A_Assn)
         trAssignment(*it1);
     else if((*it1)->Kind==AST::A_WhileStm)
         trWhile(*it1);
     else if((*it1)->Kind==AST::A_IfStm)
         trIf(*it1);
+    else if((*it1)->Kind==AST::A_IfElse)
+    {
+        cout<<"yolo"<<endl;
+        trIfElse(*it1);
+        elseStack.push_back((*it1)->node.IfElse.codeelse);
+    }
     else
     {
         cout<<"wrong case"<<endl;
@@ -465,4 +504,39 @@ void TranslatorMain(vector<AST*>::iterator &it1,vector<AST*>::iterator &it2)
         advance(it2,1);
         TranslatorMain(it1,it2);
     }
+    if(elseStack.size()!=0)
+        if(*elseStack.rbegin()==*(it1+1))
+            if((*it2)->Kind!=AST::A_IfElse)
+            {   
+                cout<<"Appending Else"<<endl;
+                auto tmp1=*ifElseStack.rbegin();
+                ifElseStack.pop_back();
+                auto tmp2=*ifElseStack.rbegin();
+                // ifElseStack.pop_back();
+                string ins="\tB ";
+                ins.append(tmp1);
+                instructions.push_back(ins);
+                ins.clear();
+                instructions.push_back(tmp2);
+                tmp1.clear();
+                tmp2.clear();
+            }
+            else
+            {
+                cout<<"Appending Else"<<endl;
+                auto tmp1=*ifElseStack.rbegin();
+                ifElseStack.pop_back();
+                auto tmp2=*ifElseStack.rbegin();
+                // ifElseStack.pop_back();
+                string ins="\tB ";
+                ins.append(tmp1);
+                instructions.push_back(ins);
+                ins.clear();
+                instructions.push_back(tmp2);
+                tmp1.clear();
+                tmp2.clear();
+                advance(it1,1);
+                advance(it2,1);
+                TranslatorMain(it1,it2);
+            }
 }

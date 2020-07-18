@@ -41,11 +41,13 @@ int main()
     while(it1!=dest.end() and it2!=head.end())
     {
         auto temp=it2;
+        auto temp2=it1;
         TranslatorMain(it1,it2);
         while(temp!=it2)
         {
             if((*temp)->Kind==AST::A_WhileStm)
             {
+                cout<<"Here here here in while"<<endl;
                 auto tmp1=*(whileStack.rbegin());
                 whileStack.pop_back();
                 auto tmp2=*(whileStack.rbegin());
@@ -57,14 +59,32 @@ int main()
             }
             if((*temp)->Kind==AST::A_IfStm)
             {
+                cout<<"here here here in if"<<endl;
                 auto tmp1=(*ifStack.rbegin());
                 ifStack.pop_back();
                 instructions.push_back(tmp1);
             }
+            if((*temp)->Kind==AST::A_IfElse)
+            {
+                cout<<"IfElse End"<<endl;
+                auto tmp1=*ifElseStack.rbegin();
+                ifElseStack.pop_back();
+                instructions.push_back(tmp1);
+            }
             ++temp;
+        }
+        // bool execNext=false;
+        if((*it2)->Kind==AST::A_IfElse)
+        {
+            cout<<"IfElse End"<<endl;
+            auto tmp1=*ifElseStack.rbegin();
+            ifElseStack.pop_back();
+            instructions.push_back(tmp1);
         }
         if((*it2)->Kind==AST::A_WhileStm)
         {
+            cout<<"Here here here in while"<<endl;
+            cout<<whileStack.size()<<endl;
             auto tmp1=*(whileStack.rbegin());
             whileStack.pop_back();
             auto tmp2=*(whileStack.rbegin());
@@ -76,6 +96,7 @@ int main()
         }
         if((*it2)->Kind==AST::A_IfStm)
         {
+            cout<<"here here here in if"<<endl;
             auto tmp1=(*ifStack.rbegin());
             ifStack.pop_back();
             instructions.push_back(tmp1);
