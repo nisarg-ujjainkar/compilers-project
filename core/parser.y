@@ -10,14 +10,9 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 	#include<vector>
 	#include "ast.hpp"  /* Info for ast */
 	#include "table.hpp"  /* Contains definition of `symrec'        */
-	// #ifdef __cplusplus  
-	// extern "C" { 
-	// #endif
 	extern "C" int yylex();  
+	extern "C" FILE *yyin;
 	void yyerror (const char *); 
-	// #ifdef __cplusplus 
-	// } 
-	// #endif
 	std::vector<AST*> head;
 	std::vector<AST*> exps;
 %}
@@ -36,20 +31,9 @@ Reference: http://dinosaur.compilertools.net/bison/bison_5.html
 %token FOR
 %token IF
 %token ELSE
-/* %token GEQ
-%token LEQ
-%token GT
-%token LT
-%token EQ
-%token NEQ
-%token AND
-%token OR
-%token join relop */
 %type  <ast> exp code block line assn IfStm WhileStm cond IfElse
 %token <op> GEQ LEQ LT GT EQ NEQ AND OR
-/* %token <op> GEQ LEQ GT LT EQ NEQ AND OR */
 %type <op> join relop
-//%type <op>	GEQ LEQ GT LT EQ NEQ AND OR join relop
 
 
 %left GEQ LEQ LT GT EQ NEQ
@@ -114,14 +98,6 @@ exp:	VAR						{ $$=genVariable($1); exps.push_back($$); }
 /* End of grammar */
 %%
 
-
-
-
-
-/* int main ()
-{
-	yyparse ();
-} */
 
 void yyerror (const char *s)  /* Called by yyparse on error */
 {

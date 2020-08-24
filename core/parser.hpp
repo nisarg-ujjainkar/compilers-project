@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.6.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_PARSER_HPP_INCLUDED
 # define YY_YY_PARSER_HPP_INCLUDED
@@ -44,41 +45,46 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    NUM = 258,
-    VAR = 259,
-    WHILE = 260,
-    FOR = 261,
-    IF = 262,
-    ELSE = 263,
-    GEQ = 264,
-    LEQ = 265,
-    LT = 266,
-    GT = 267,
-    EQ = 268,
-    NEQ = 269,
-    AND = 270,
-    OR = 271,
-    NEG = 272
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    NUM = 258,                     /* NUM  */
+    VAR = 259,                     /* VAR  */
+    WHILE = 260,                   /* WHILE  */
+    FOR = 261,                     /* FOR  */
+    IF = 262,                      /* IF  */
+    ELSE = 263,                    /* ELSE  */
+    GEQ = 264,                     /* GEQ  */
+    LEQ = 265,                     /* LEQ  */
+    LT = 266,                      /* LT  */
+    GT = 267,                      /* GT  */
+    EQ = 268,                      /* EQ  */
+    NEQ = 269,                     /* NEQ  */
+    AND = 270,                     /* AND  */
+    OR = 271,                      /* OR  */
+    NEG = 272                      /* NEG  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "parser.y"
+#line 20 "parser.y"
 
 	double val;  /* For returning numbers.                   */
 	struct symrec *tptr;   /* For returning symbol-table pointers      */
 	struct AST *ast;
 	char *op;
 
-#line 82 "parser.hpp"
+#line 88 "parser.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

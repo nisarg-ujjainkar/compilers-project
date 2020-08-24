@@ -1,6 +1,6 @@
-#line 2 "lexer.cpp"
+#line 1 "lexer.cpp"
 
-#line 4 "lexer.cpp"
+#line 3 "lexer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -477,8 +477,8 @@ char *yytext;
     #define YY_DECL extern "C" int yylex()
 	symrec *sym_table = (symrec *)0;
 	int lineNum=0;
+#line 480 "lexer.cpp"
 #line 481 "lexer.cpp"
-#line 482 "lexer.cpp"
 
 #define INITIAL 0
 
@@ -697,7 +697,7 @@ YY_DECL
 	{
 #line 15 "lexer.l"
 
-#line 701 "lexer.cpp"
+#line 700 "lexer.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -845,7 +845,7 @@ YY_RULE_SETUP
 #line 33 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 849 "lexer.cpp"
+#line 848 "lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

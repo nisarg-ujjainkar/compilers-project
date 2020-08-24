@@ -8,9 +8,22 @@
 
 using namespace std;
 vector<AST*> expDest;
-
-int main()
+// FILE *yyin;
+int main(int argc, char **argv)
 {
+    if(argc<2)
+    {
+        cout<<"file not provided"<<endl;
+        exit(1);
+    }
+    FILE *filePt=fopen(argv[1],"r");
+    if(!filePt)
+    {
+        cout << "Bad Input.Noexistant file" << endl;
+        exit(1);
+    }
+    extern FILE* yyin;
+    yyin=filePt;
     yyparse();
     cout<<head.size()<<endl;
     for (auto a:head)
